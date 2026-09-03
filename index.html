@@ -1,0 +1,1978 @@
+<!DOCTYPE html>
+<html lang="bn" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSC Study Tracker - Nadim</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0284c7',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                        },
+                        turquoise: {
+                            400: '#22d3ee',
+                            500: '#06b6d4',
+                            600: '#0891b2',
+                            accent: '#66FFD9'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'Hind Siliguri', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts & Font Awesome Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', 'Hind Siliguri', sans-serif;
+            background-color: #f8fafc;
+            color: #0f172a;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        .building-bar {
+            transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s ease, opacity 0.2s ease;
+        }
+
+        /* AI WELCOME POPUP STYLES */
+        @keyframes borderRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .animate-spin-slow {
+            animation: borderRotate 2s linear infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.02); opacity: 0.95; }
+        }
+
+        .animate-pulse-glow {
+            animation: pulseGlow 1.5s ease-in-out infinite;
+        }
+
+        /* Custom Dynamic Range Slider Styling */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+
+        input[type=range]:focus {
+            outline: none;
+        }
+
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 8px;
+            cursor: pointer;
+            border-radius: 9999px;
+            background: #e2e8f0;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: var(--slider-color, #0284c7);
+            cursor: pointer;
+            -webkit-appearance: none;
+            margin-top: -6px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            transition: transform 0.1s ease;
+        }
+
+        input[type=range]::-webkit-slider-thumb:active {
+            transform: scale(1.15);
+        }
+
+        input[type=range]::-moz-range-track {
+            width: 100%;
+            height: 8px;
+            cursor: pointer;
+            border-radius: 9999px;
+            background: #e2e8f0;
+        }
+
+        input[type=range]::-moz-range-thumb {
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: var(--slider-color, #0284c7);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            transition: transform 0.1s ease;
+        }
+
+        input[type=range]::-moz-range-thumb:active {
+            transform: scale(1.15);
+        }
+    </style>
+</head>
+<body class="pb-24 max-w-md md:max-w-3xl lg:max-w-4xl mx-auto min-h-screen bg-slate-50 relative border-x border-slate-200/80 shadow-sm">
+
+    <!-- AI WELCOME LOADING POPUP OVERLAY -->
+    <div id="welcome-popup-overlay" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-md transition-all duration-500 opacity-100">
+        <div id="welcome-popup-card" class="relative p-[3px] rounded-3xl overflow-hidden max-w-xs md:max-w-sm w-[90%] shadow-2xl transition-all duration-500 scale-100 animate-pulse-glow">
+            
+            <!-- AI Traveling Multi-Color Glowing Gradient Border -->
+            <div class="absolute -inset-[150%] bg-[conic-gradient(from_0deg,#3b82f6,#8b5cf6,#ec4899,#f59e0b,#10b981,#3b82f6)] animate-spin-slow opacity-95 blur-[1px]"></div>
+            
+            <!-- Popup Inner Content Card -->
+            <div class="relative z-10 bg-white rounded-[21px] p-6 md:p-8 flex flex-col items-center text-center space-y-3">
+                
+                <!-- Circular Profile Image with AI Glow -->
+                <div class="relative group my-1">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 rounded-full blur-md opacity-70"></div>
+                    <img id="welcome-profile-img" src="" alt="Profile" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'" class="relative w-20 h-20 md:w-24 md:h-24 rounded-full object-cover border-2 border-white shadow-lg ring-2 ring-sky-100">
+                </div>
+
+                <!-- Text Content -->
+                <div class="space-y-1">
+                    <h2 class="text-xl md:text-2xl font-extrabold text-blue-700 tracking-tight">Hey, <span id="welcome-name">NADIM</span></h2>
+                    <p class="text-xs md:text-sm font-bold text-slate-800 tracking-wider">SSC'27 - SCIENCE</p>
+                </div>
+
+                <!-- Subtitle / Status -->
+                <p class="text-xs md:text-sm font-semibold text-slate-500 pt-2 flex items-center justify-center gap-1.5">
+                    <span>আপনার স্টাডি ড্যাশবোর্ড প্রস্তুত হচ্ছে...</span>
+                </p>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- APP MAIN CONTAINER -->
+    <div id="app" class="px-4 py-4 space-y-5">
+        <!-- Content will be injected dynamically -->
+    </div>
+
+    <!-- BOTTOM NAVIGATION BAR -->
+    <nav class="fixed bottom-0 left-0 right-0 max-w-md md:max-w-3xl lg:max-w-4xl mx-auto bg-white/95 backdrop-blur-md border-t border-slate-200 px-6 py-2.5 flex justify-around items-center z-40 shadow-lg">
+        <button id="nav-home" onclick="switchTab('home')" class="flex flex-col items-center gap-1 text-sky-600 font-semibold transition-all duration-200">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center bg-sky-50 text-sky-600 shadow-sm" id="nav-home-icon">
+                <i class="fa-solid fa-house text-lg"></i>
+            </div>
+            <span class="text-xs">Home</span>
+        </button>
+        <button id="nav-dashboard" onclick="switchTab('dashboard')" class="flex flex-col items-center gap-1 text-slate-400 font-medium hover:text-slate-600 transition-all duration-200">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center bg-transparent text-slate-400" id="nav-dashboard-icon">
+                <i class="fa-solid fa-chart-line text-lg"></i>
+            </div>
+            <span class="text-xs">Dashboard</span>
+        </button>
+    </nav>
+
+    <!-- MODALS CONTAINER -->
+    <div id="modal-overlay" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div id="modal-content" class="bg-white rounded-3xl w-full max-w-lg shadow-2xl p-5 md:p-6 relative max-h-[90vh] overflow-y-auto transform transition-all">
+            <!-- Modal Body Injected Dynamically -->
+        </div>
+    </div>
+
+    <!-- CUSTOM SUBJECT SELECTOR POPUP MODAL -->
+    <div id="subject-modal-overlay" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl w-full max-w-sm shadow-2xl p-5 space-y-4 transform transition-all">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <h4 class="font-extrabold text-slate-800 text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-book-bookmark text-[#F8B337]"></i> বিষয় নির্বাচন করুন
+                </h4>
+                <button onclick="closeSubjectModal()" class="w-7 h-7 rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 flex items-center justify-center text-xs">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div id="subject-modal-list" class="space-y-1.5 max-h-[60vh] overflow-y-auto pr-1">
+                <!-- Subject buttons injected dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP JAVASCRIPT LOGIC -->
+    <script>
+        const PROFILE_IMAGE_URL = "https://github.com/generalnadim999-prog/NADIM/blob/main/file_0000000005b4820bb001571dfb5739a8.png";
+        const DATA_VERSION = 6;
+        let welcomePopupDismissed = false;
+
+        // Temporary state store for editing modal values before committing via Tick button
+        let tempChapterState = null;
+        let tempStudySnapshot = null;
+
+        // Helper function for smooth countdown number animation
+        function animateNumber(elementId, startVal, endVal, duration = 1200) {
+            const element = document.getElementById(elementId);
+            if (!element) return;
+            
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                // Ease-out cubic formula for natural deceleration
+                const easeOut = 1 - Math.pow(1 - progress, 3);
+                const current = Math.floor(startVal - (startVal - endVal) * easeOut);
+                element.textContent = current;
+                
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                } else {
+                    element.textContent = endVal;
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // Helper function to generate clean chapter objects
+        function createChapter(origNum, name, cqTarget=30, mcqTarget=120, sqTarget=25, cqPastCount=15, mcqPastCount=40) {
+            return {
+                id: 'c' + origNum,
+                origNum: origNum,
+                name: name,
+                cqTarget: cqTarget,
+                cqSolved: 0,
+                mcqTarget: mcqTarget,
+                mcqSolved: 0,
+                sqTarget: sqTarget,
+                sqSolved: 0,
+                study: { book: 0, class: 0, summary: 0, notes: 0 },
+                cqPastCount: cqPastCount,
+                mcqPastCount: mcqPastCount,
+                lastStudied: null
+            };
+        }
+
+        function getDirectImageUrl(url) {
+            if (!url) return 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80';
+            if (url.includes('drive.google.com')) {
+                const match = url.match(/\/d\/([^\/]+)/) || url.match(/id=([^&]+)/);
+                if (match && match[1]) return `https://lh3.googleusercontent.com/d/${match[1]}`;
+            }
+            if (url.includes('github.com') && url.includes('/blob/')) {
+                return url.replace('github.com', 'raw.githubusercontent.com').replace('/blob/', '/');
+            }
+            return url;
+        }
+
+        // --- 10 SUBJECTS DEFAULT DATA ---
+        const DEFAULT_SUBJECTS = [
+            // 01. পদার্থবিজ্ঞান (Physics)
+            { 
+                id: 'phy', name: 'পদার্থবিজ্ঞান', enName: 'Physics', category: 'science', themeColor: '#93C9ED', bgLight: '#f0f9ff', coverUrl: 'https://drive.google.com/file/d/1IFLySN0_HM76wwBeFVZr92RvrLwg2PlC/view?usp=drivesdk', longDaysLimit: 15,
+                chapters: [
+                    createChapter(1, 'ভৌত রাশি এবং তাদের পরিমাপ', 30, 150, 25, 12, 45),
+                    createChapter(2, 'গতি', 40, 200, 30, 25, 75),
+                    createChapter(3, 'বল', 35, 180, 25, 20, 60),
+                    createChapter(4, 'কাজ, ক্ষমতা ও শক্তি', 35, 160, 25, 22, 65),
+                    createChapter(5, 'পদার্থের অবস্থা ও চাপ', 30, 150, 20, 18, 50),
+                    createChapter(6, 'বস্তুর ওপর তাপের প্রভাব', 30, 150, 20, 16, 48),
+                    createChapter(7, 'তরঙ্গ ও শব্দ', 30, 140, 20, 15, 42),
+                    createChapter(8, 'আলোর প্রতিফলন', 35, 160, 25, 24, 70),
+                    createChapter(9, 'আলোর প্রতিসরণ', 35, 160, 25, 22, 68),
+                    createChapter(10, 'স্থির বিদ্যুৎ', 30, 150, 20, 17, 52),
+                    createChapter(11, 'চল বিদ্যুৎ', 40, 200, 30, 28, 85),
+                    createChapter(12, 'বিদ্যুতের চৌম্বক ক্রিয়া', 30, 140, 20, 14, 40),
+                    createChapter(13, 'তেজস্ক্রিয়তা ও ইলেকট্রনিকস', 25, 120, 20, 10, 35)
+                ]
+            },
+            
+            // 02. রসায়ন (Chemistry)
+            { 
+                id: 'chem', name: 'রসায়ন', enName: 'Chemistry', category: 'science', themeColor: '#C298C6', bgLight: '#fcf6fd', coverUrl: 'https://drive.google.com/file/d/1n-IUkYDU711zszZwm0JvS33Rp8I4nRon/view?usp=drivesdk', longDaysLimit: 15,
+                chapters: [
+                    createChapter(1, 'রসায়নের ধারণা', 20, 100, 20, 8, 30),
+                    createChapter(2, 'পদার্থের অবস্থা', 25, 120, 20, 12, 40),
+                    createChapter(3, 'পদার্থের গঠন', 35, 160, 25, 24, 72),
+                    createChapter(4, 'পর্যায় সারণি', 40, 180, 30, 26, 80),
+                    createChapter(5, 'রাসায়নিক বন্ধন', 40, 180, 30, 25, 78),
+                    createChapter(6, 'মোলের ধারণা ও রাসায়নিক গণনা', 40, 200, 30, 28, 88),
+                    createChapter(7, 'রাসায়নিক বিক্রিয়া', 35, 160, 25, 22, 68),
+                    createChapter(8, 'রসায়ন ও শক্তি', 30, 150, 20, 18, 55),
+                    createChapter(9, 'এসিড-ক্ষারক সমতা', 30, 150, 20, 16, 50),
+                    createChapter(10, 'খনিজ সম্পদ: ধাতু-অধাতু', 30, 140, 20, 15, 45),
+                    createChapter(11, 'খনিজ সম্পদ: জীবাশ্ম', 40, 200, 30, 27, 85),
+                    createChapter(12, 'আমাদের জীবনে রসায়ন', 25, 120, 20, 10, 38)
+                ]
+            },
+
+            // 03. উচ্চতর গণিত (Higher Math)
+            { 
+                id: 'hmath', name: 'উচ্চতর গণিত', enName: 'Higher Math', category: 'science', themeColor: '#F2B770', bgLight: '#fffbf5', coverUrl: 'https://drive.google.com/file/d/1E1eFm8pTi8dSysntBD6_uhgh7WEZyi6c/view?usp=drivesdk', longDaysLimit: 12,
+                chapters: [
+                    createChapter(1, 'সেট ও ফাংশন', 40, 150, 25, 22, 60),
+                    createChapter(2, 'বীজগাণিতিক রাশি', 40, 160, 25, 25, 70),
+                    createChapter(3, 'জ্যামিতি', 35, 120, 20, 18, 45),
+                    createChapter(4, 'জ্যামিতিক অঙ্কন', 25, 100, 15, 12, 30),
+                    createChapter(5, 'সমীকরণ', 35, 140, 20, 16, 50),
+                    createChapter(6, 'অসমতা', 30, 120, 20, 14, 40),
+                    createChapter(7, 'অসীম ধারা', 35, 140, 20, 20, 55),
+                    createChapter(8, 'ত্রিকোণমিতি', 45, 180, 30, 30, 90),
+                    createChapter(9, 'সূচকীয় ও লগারিদমীয় ফাংশন', 40, 160, 25, 24, 75),
+                    createChapter(10, 'দ্বিপদী বিস্তৃতি', 35, 140, 20, 18, 52),
+                    createChapter(11, 'স্থানাঙ্ক জ্যামিতি', 45, 180, 30, 28, 85),
+                    createChapter(12, 'সমতলীয় ভেক্টর', 30, 120, 20, 16, 42),
+                    createChapter(13, 'ঘন জ্যামিতি', 30, 120, 20, 15, 38),
+                    createChapter(14, 'সম্ভাবনা', 35, 150, 20, 22, 65)
+                ]
+            },
+
+            // 04. জীববিজ্ঞান (Biology)
+            { 
+                id: 'bio', name: 'জীববিজ্ঞান', enName: 'Biology', category: 'science', themeColor: '#B4D675', bgLight: '#f7fcf0', coverUrl: 'https://drive.google.com/file/d/1Z62v0pdpx17528RcFA3aPN-FSgNqDpyW/view?usp=drivesdk', longDaysLimit: 15,
+                chapters: [
+                    createChapter(1, 'জীবন পাঠ', 20, 100, 20, 8, 35),
+                    createChapter(2, 'জীবকোষ ও টিস্যু', 40, 180, 30, 26, 80),
+                    createChapter(3, 'কোষ বিভাজন', 30, 140, 20, 18, 50),
+                    createChapter(4, 'জীবনীশক্তি', 35, 160, 25, 24, 70),
+                    createChapter(5, 'খাদ্য, পুষ্টি এবং পরিপাক', 35, 160, 25, 20, 65),
+                    createChapter(6, 'জীবে পরিবহণ', 35, 150, 25, 18, 58),
+                    createChapter(7, 'গ্যাসীয় বিনিময়', 30, 140, 20, 16, 48),
+                    createChapter(8, 'রেচন প্রক্রিয়া', 30, 130, 20, 15, 45),
+                    createChapter(9, 'দৃঢ়তা প্রদান ও চলন', 30, 140, 20, 14, 42),
+                    createChapter(10, 'সমন্বয়', 35, 150, 25, 19, 56),
+                    createChapter(11, 'জীবের প্রজনন', 40, 180, 30, 25, 78),
+                    createChapter(12, 'জীবের বংশগতি ও জৈব অভিব্যক্তি', 40, 180, 30, 24, 76),
+                    createChapter(13, 'জীবের পরিবেশ', 25, 120, 20, 12, 40),
+                    createChapter(14, 'জীবপ্রযুক্তি', 35, 150, 25, 22, 68)
+                ]
+            },
+
+            // 05. বাংলাদেশ ও বিশ্বপরিচয় (BGS)
+            { 
+                id: 'bgs', name: 'বাংলাদেশ ও বিশ্বপরিচয়', enName: 'BGS', category: 'science', themeColor: '#9B634C', bgLight: '#faf5f3', coverUrl: 'https://drive.google.com/file/d/1VaIwfKyZ3Z4e_NUdcyEDI2flONskKydi/view?usp=drivesdk', longDaysLimit: 15,
+                chapters: [
+                    createChapter(1, 'পূর্ব বাংলায় আন্দোলন ও জাতীয়তাবাদের উত্থান (১৯৪৭–১৯৭০)', 35, 160, 25, 25, 75),
+                    createChapter(2, 'বাংলাদেশের স্বাধীনতা', 35, 160, 25, 26, 78),
+                    createChapter(3, 'সৌরজগৎ ও ভূমণ্ডল', 30, 140, 20, 18, 52),
+                    createChapter(4, 'বাংলাদেশের ভূপ্রকৃতি ও জলবায়ু', 30, 140, 20, 17, 50),
+                    createChapter(5, 'বাংলাদেশের নদ-নদী ও প্রাকৃতিক সম্পদ', 30, 130, 20, 16, 48),
+                    createChapter(6, 'রাষ্ট্র, নাগরিকতা ও আইন', 30, 140, 20, 18, 55),
+                    createChapter(7, 'বাংলাদেশ সরকারের বিভিন্ন অঙ্গ ও প্রশাসন ব্যবস্থা', 30, 140, 20, 17, 52),
+                    createChapter(8, 'বাংলাদেশের গণতন্ত্র ও নির্বাচন ব্যবস্থা', 25, 120, 15, 12, 40),
+                    createChapter(9, 'জাতিসংঘ ও বাংলাদেশ', 25, 120, 15, 14, 42),
+                    createChapter(10, 'জাতীয় সম্পদ ও অর্থনৈতিক ব্যবস্থা', 30, 130, 20, 15, 46),
+                    createChapter(11, 'অর্থনৈতিক নির্দেশকসমূহ ও বাংলাদেশের অর্থনীতির প্রকৃতি', 30, 130, 20, 16, 48),
+                    createChapter(12, 'বাংলাদেশ সরকারের অর্থ ও ব্যাংক ব্যবস্থা', 30, 130, 20, 15, 45),
+                    createChapter(13, 'বাংলাদেশের পরিবার কাঠামো ও সামাজিকীকরণ', 25, 120, 15, 11, 38),
+                    createChapter(14, 'বাংলাদেশের সামাজিক পরিবর্তন', 25, 120, 15, 12, 40),
+                    createChapter(15, 'বাংলাদেশের সামাজিক সমস্যা ও প্রতিকার', 30, 140, 20, 18, 54)
+                ]
+            },
+
+            // 06. সাধারণ গণিত (General Math)
+            { 
+                id: 'math', name: 'সাধারণ গণিত', enName: 'General Math', category: 'general', themeColor: '#85C6CC', bgLight: '#f2fafa', coverUrl: 'https://drive.google.com/file/d/1KzzsbzOUoKe_xq7G1HLckfzcZ06QmwG7/view?usp=drivesdk', longDaysLimit: 10,
+                chapters: [
+                    createChapter(1, 'বাস্তব সংখ্যা', 25, 120, 20, 12, 40),
+                    createChapter(2, 'সেট ও ফাংশন', 35, 150, 25, 22, 65),
+                    createChapter(3, 'বীজগাণিতিক রাশি', 45, 200, 30, 30, 95),
+                    createChapter(4, 'সূচক ও লগারিদম', 35, 150, 25, 20, 60),
+                    createChapter(5, 'এক চলকবিশিষ্ট সমীকরণ', 30, 130, 20, 15, 45),
+                    createChapter(6, 'রেখা, কোণ ও ত্রিভুজ', 30, 120, 20, 14, 42),
+                    createChapter(7, 'ব্যবহারিক জ্যামিতি', 30, 100, 15, 18, 38),
+                    createChapter(8, 'বৃত্ত', 40, 160, 25, 25, 75),
+                    createChapter(9, 'ত্রিকোণমিতিক অনুপাত', 45, 180, 30, 28, 88),
+                    createChapter(10, 'দূরত্ব ও উচ্চতা', 35, 140, 20, 22, 62),
+                    createChapter(11, 'বীজগাণিতিক অনুপাত ও সমানুপাত', 35, 140, 20, 18, 55),
+                    createChapter(12, 'দুই চলকবিশিষ্ট সরল সহসমীকরণ', 35, 140, 20, 16, 50),
+                    createChapter(13, 'সসীম ধারা', 40, 160, 25, 24, 72),
+                    createChapter(14, 'অনুপাত, সদৃশতা ও প্রতিসমতা', 25, 100, 15, 10, 32),
+                    createChapter(15, 'ক্ষেত্রফল সম্পর্কিত উপপাদ্য ও সম্পাদ্য', 30, 110, 15, 15, 40),
+                    createChapter(16, 'পরিমিতি', 45, 180, 30, 27, 85),
+                    createChapter(17, 'পরিসংখ্যান', 35, 150, 20, 25, 70)
+                ]
+            },
+
+            // 07. বাংলা ১ম
+            { 
+                id: 'ban1', name: 'বাংলা ১ম', enName: 'Bangla 1st', category: 'general', themeColor: '#C3835E', bgLight: '#faf3ef', coverUrl: 'https://drive.google.com/file/d/1NT0D-oFsUNrx_Ca-8SoDMKzcwqgjsLN8/view?usp=drivesdk', longDaysLimit: 20,
+                chapters: [
+                    createChapter(1, 'প্রত্যুপকার', 20, 80, 15, 15, 45),
+                    createChapter(2, 'ফুলের বিবাহ', 20, 80, 15, 14, 42),
+                    createChapter(3, 'শুভা', 20, 80, 15, 16, 48),
+                    createChapter(4, 'বই পড়া', 20, 80, 15, 18, 52),
+                    createChapter(5, 'অভাগীর স্বর্গ', 15, 60, 10, 12, 38),
+                    createChapter(6, 'নিরীহ বাঙালি', 20, 80, 15, 17, 50),
+                    createChapter(7, 'পল্লীসাহিত্য', 15, 70, 10, 11, 35),
+                    createChapter(8, 'আম-আঁটির ভেঁপু', 20, 80, 15, 15, 46),
+                    createChapter(9, 'মানুষ মুহম্মদ (স.)', 20, 80, 15, 18, 54),
+                    createChapter(10, 'নিমগাছ', 15, 60, 10, 10, 32),
+                    createChapter(11, 'উপেক্ষিত শক্তির উদ্বোধন', 15, 60, 10, 14, 40),
+                    createChapter(12, 'প্রবাস বন্ধু', 15, 60, 10, 16, 45),
+                    createChapter(13, 'মমতাদি', 15, 60, 10, 12, 38),
+                    createChapter(14, 'একুশের গল্প', 15, 60, 10, 15, 44),
+                    createChapter(15, 'আমাদের নতুন গৌরবগাথা', 15, 60, 10, 13, 39),
+                    createChapter(16, 'বন্দনা', 15, 60, 10, 13, 39),
+                    createChapter(17, 'কপোতাক্ষ নদ', 15, 60, 10, 13, 39),
+                    createChapter(18, 'প্রাণ', 15, 60, 10, 13, 39),
+                    createChapter(19, 'অন্ধবধূ', 15, 60, 10, 13, 39),
+                    createChapter(20, 'ঝরনার গান', 15, 60, 10, 13, 39),
+                    createChapter(21, 'জীবন বিনিময়', 15, 60, 10, 13, 39),
+                    createChapter(22, 'উমর ফারুক', 15, 60, 10, 13, 39),
+                    createChapter(23, 'সেইদিন এই মাঠ', 15, 60, 10, 13, 39),
+                    createChapter(24, 'যাব আমি তোমার দেশে', 15, 60, 10, 13, 39),
+                    createChapter(25, 'আমার দেশ', 15, 60, 10, 13, 39),
+                    createChapter(26, 'বৃষ্টি', 15, 60, 10, 13, 39),
+                    createChapter(27, 'আমি কোনো আগন্তুক নই', 15, 60, 10, 13, 39),
+                    createChapter(28, 'রানার', 15, 60, 10, 13, 39),
+                    createChapter(29, 'তোমাকে পাওয়ার জন্যে, হে স্বাধীনতা', 15, 60, 10, 13, 39),
+                    createChapter(30, 'বোশেখ', 15, 60, 10, 13, 39),
+                    createChapter(31, '১৯৭১', 15, 60, 10, 13, 39),
+                    createChapter(32, 'বহিপীর', 15, 60, 10, 13, 39)
+                ]
+            },
+
+            // 08. বাংলা ২য়
+            { 
+                id: 'ban2', name: 'বাংলা ২য়', enName: 'Bangla 2nd', category: 'general', themeColor: '#5F6B53', bgLight: '#f4f6f3', coverUrl: 'https://drive.google.com/file/d/1iP4rggOMoCv6fvRTeJpjVSoKUvpqO1VE/view?usp=drivesdk', longDaysLimit: 20,
+                chapters: [
+                    createChapter(1, 'ভাষা ও বাংলা ভাষা', 0, 100, 0, 0, 60),
+                    createChapter(2, 'বাংলা ব্যাকরণ', 0, 100, 0, 0, 65),
+                    createChapter(3, 'বাংলা ভাষার রীতি ও বিভাজন', 0, 90, 0, 0, 50),
+                    createChapter(4, 'বাকযন্ত্র', 0, 120, 0, 0, 80),
+                    createChapter(5, 'ধ্বনি ও বর্ণ', 0, 110, 0, 0, 75),
+                    createChapter(6, 'স্বরধ্বনি', 0, 90, 0, 0, 55),
+                    createChapter(7, 'ব্যঞ্জনধ্বনি', 0, 80, 0, 0, 48),
+                    createChapter(8, 'বর্ণের উচ্চারণ', 0, 70, 0, 0, 40),
+                    createChapter(9, 'শব্দ ও পদের গঠন', 0, 80, 0, 0, 52),
+                    createChapter(10, 'উপসর্গ দিয়ে শব্দ গঠন', 0, 100, 0, 0, 68),
+                    createChapter(11, 'প্রত্যয় দিয়ে শব্দ গঠন', 0, 100, 0, 0, 60),
+                    createChapter(12, 'সমাস প্রক্রিয়ায় শব্দ গঠন', 0, 100, 0, 0, 65),
+                    createChapter(13, 'সন্ধি', 0, 90, 0, 0, 50),
+                    createChapter(14, 'দ্বিত্ব শব্দ', 0, 120, 0, 0, 80),
+                    createChapter(15, 'নরবাচক ও নারীবাচক শব্দ', 0, 110, 0, 0, 75),
+                    createChapter(16, 'সংখ্যাবাচক শব্দ', 0, 90, 0, 0, 55),
+                    createChapter(17, 'শব্দের শ্রেণিবিভাগ', 0, 80, 0, 0, 48),
+                    createChapter(18, 'বিশেষ্য', 0, 70, 0, 0, 40),
+                    createChapter(19, 'সর্বনাম', 0, 80, 0, 0, 52),
+                    createChapter(20, 'বিশেষণ', 0, 100, 0, 0, 68),
+                    createChapter(21, 'ক্রিয়া', 0, 100, 0, 0, 60),
+                    createChapter(22, 'ক্রিয়াবিশেষণ', 0, 100, 0, 0, 65),
+                    createChapter(23, 'অনুসর্গ', 0, 90, 0, 0, 50),
+                    createChapter(24, 'যোজক', 0, 120, 0, 0, 80),
+                    createChapter(25, 'আবেগ', 0, 110, 0, 0, 75),
+                    createChapter(26, 'নির্দেশক', 0, 90, 0, 0, 55),
+                    createChapter(27, 'বচন', 0, 80, 0, 0, 48),
+                    createChapter(28, 'বিভক্তি', 0, 70, 0, 0, 40),
+                    createChapter(29, 'ক্রিয়াবিভক্তি', 0, 80, 0, 0, 52),
+                    createChapter(30, 'ক্রিয়ার কাল', 0, 100, 0, 0, 68),
+                    createChapter(31, 'বাক্যের অংশ ও শ্রেণিবিভাগ', 0, 100, 0, 0, 60),
+                    createChapter(32, 'বাক্যের বর্গ', 0, 100, 0, 0, 65),
+                    createChapter(33, 'উদ্দেশ্য ও বিধেয়', 0, 90, 0, 0, 50),
+                    createChapter(34, 'সরল, জটিল ও যৌগিক বাক্য', 0, 120, 0, 0, 80),
+                    createChapter(35, 'কারক', 0, 110, 0, 0, 75),
+                    createChapter(36, 'বাচ্য', 0, 90, 0, 0, 55),
+                    createChapter(37, 'উক্তি', 0, 80, 0, 0, 48),
+                    createChapter(38, 'যতিচিহ্ন', 0, 70, 0, 0, 40),
+                    createChapter(39, 'বাগর্থ', 0, 80, 0, 0, 52),
+                    createChapter(40, 'বাগধারা', 0, 100, 0, 0, 68),
+                    createChapter(41, 'প্রতিশব্দ', 0, 100, 0, 0, 60),
+                    createChapter(42, 'বিপরীত শব্দ', 0, 100, 0, 0, 65),
+                    createChapter(43, 'শব্দজোড়', 0, 90, 0, 0, 50)
+                ]
+            },
+
+            // 09. ইসলাম ও নৈতিক শিক্ষা (Islam Education)
+            { 
+                id: 'islam', name: 'ইসলাম ও নৈতিক শিক্ষা', enName: 'Islam Education', category: 'general', themeColor: '#3A6F76', bgLight: '#f1f7f8', coverUrl: 'https://drive.google.com/file/d/1ofOcFb9sTqzmDxvyvTl2kRsuLm0YhpXE/view?usp=drivesdk', longDaysLimit: 20,
+                chapters: [
+                    createChapter(1, 'আকাইদ ও নৈতিক জীবন', 35, 160, 25, 24, 75),
+                    createChapter(2, 'শরিয়তের উৎস', 35, 160, 25, 25, 78),
+                    createChapter(3, 'ইবাদত', 35, 150, 25, 22, 70),
+                    createChapter(4, 'আখলাক', 35, 150, 25, 22, 72),
+                    createChapter(5, 'আদর্শ জীবনচরিত', 35, 160, 25, 26, 80)
+                ]
+            },
+
+            // 10. তথ্য ও যোগাযোগ প্রযুক্তি (ICT)
+            { 
+                id: 'ict', name: 'তথ্য ও যোগাযোগ প্রযুক্তি', enName: 'ICT', category: 'general', themeColor: '#334786', bgLight: '#f1f3f9', coverUrl: 'https://drive.google.com/file/d/1m6FyasmH8CStE9fWq67LLz7Jy8T8eKz9/view?usp=drivesdk', longDaysLimit: 15,
+                chapters: [
+                    createChapter(1, 'তথ্য ও যোগাযোগ প্রযুক্তি ও আমাদের বাংলাদেশ', 0, 120, 20, 0, 60),
+                    createChapter(2, 'কম্পিউটার রক্ষণাবেক্ষণ ও সাইবার নিরাপত্তা', 0, 130, 20, 0, 65),
+                    createChapter(3, 'ইন্টারনেট ও ওয়েব পরিচিতি', 0, 130, 20, 0, 62),
+                    createChapter(4, 'আমার লেখালেখি ও হিসাব', 0, 150, 25, 0, 75),
+                    createChapter(5, 'মাল্টিমিডিয়া ও গ্রাফিক্স', 0, 150, 25, 0, 78),
+                    createChapter(6, 'প্রোগ্রামিংয়ের মাধ্যমে সমস্যার সমাধান', 0, 160, 25, 0, 85)
+                ]
+            }
+        ];
+
+        let appState = {
+            dataVersion: DATA_VERSION,
+            user: {
+                name: 'নাদিম হোসেন',
+                welcomeName: 'NADIM',
+                profileImageUrl: PROFILE_IMAGE_URL,
+                subtitle: 'Start Your Study Soon'
+            },
+            dates: {
+                testExam: '2026-11-01',
+                sscExam: '2027-03-15'
+            },
+            activeTab: 'home',
+            subjects: DEFAULT_SUBJECTS,
+            dailyLogs: {},
+            weekOffset: 0
+        };
+
+        function loadStorage() {
+            const stored = localStorage.getItem('nadim_study_tracker_data');
+            if (stored) {
+                try {
+                    const parsed = JSON.parse(stored);
+                    if (parsed) {
+                        if (!parsed.dataVersion || parsed.dataVersion < DATA_VERSION) {
+                            parsed.subjects = DEFAULT_SUBJECTS;
+                            parsed.dataVersion = DATA_VERSION;
+                        } else if (parsed.subjects) {
+                            DEFAULT_SUBJECTS.forEach((defSub) => {
+                                const found = parsed.subjects.find(s => s.id === defSub.id);
+                                if (found) {
+                                    defSub.chapters = found.chapters || defSub.chapters;
+                                    if (found.coverUrl) defSub.coverUrl = found.coverUrl;
+                                }
+                            });
+                            parsed.subjects = DEFAULT_SUBJECTS;
+                        }
+                        parsed.user = parsed.user || {};
+                        parsed.user.name = parsed.user.name || 'নাদিম হোসেন';
+                        parsed.user.welcomeName = parsed.user.welcomeName || 'NADIM';
+                        parsed.user.profileImageUrl = parsed.user.profileImageUrl || PROFILE_IMAGE_URL;
+                        parsed.user.subtitle = parsed.user.subtitle || 'Start Your Study Soon';
+                        appState = parsed;
+                        saveStorage();
+                    }
+                } catch(e) { console.error('Data parsing error', e); }
+            } else {
+                saveStorage();
+            }
+        }
+
+        function saveStorage() {
+            localStorage.setItem('nadim_study_tracker_data', JSON.stringify(appState));
+        }
+
+        // --- CHAPTER & SUBJECT PROGRESS CALCULATIONS ---
+        function getChapterProgress(ch, subId) {
+            if (!ch) return 0;
+            const studyAvg = ((ch.study.book || 0) + (ch.study.class || 0) + (ch.study.summary || 0) + (ch.study.notes || 0)) / 4;
+            const mcqPct = ch.mcqTarget > 0 ? Math.min(100, (ch.mcqSolved / ch.mcqTarget) * 100) : 0;
+
+            if (subId === 'ban2') {
+                return Math.min(100, (studyAvg + mcqPct) / 2);
+            }
+
+            const hasSqSegment = !(subId === 'ban1' && ch.origNum >= 31 && ch.origNum <= 32);
+            const sqPct = hasSqSegment && ch.sqTarget > 0 ? Math.min(100, (ch.sqSolved / ch.sqTarget) * 100) : 0;
+            if (subId === 'ict') {
+                return Math.min(100, (studyAvg + mcqPct + sqPct) / 3);
+            }
+
+            const cqPct = ch.cqTarget > 0 ? Math.min(100, (ch.cqSolved / ch.cqTarget) * 100) : 0;
+            const segmentCount = hasSqSegment ? 4 : 3;
+            return Math.min(100, (studyAvg + cqPct + mcqPct + sqPct) / segmentCount);
+        }
+
+        function getSubjectProgress(sub) {
+            if (!sub.chapters || sub.chapters.length === 0) return 0;
+            const sumPct = sub.chapters.reduce((acc, ch) => acc + getChapterProgress(ch, sub.id), 0);
+            const rawAvg = sumPct / sub.chapters.length;
+
+            if (sub.id === 'ban2') {
+                return rawAvg * 0.30;
+            }
+            return rawAvg;
+        }
+
+        function OverallSSCProgress() {
+            let totalEarned = 0;
+            appState.subjects.forEach(sub => {
+                totalEarned += getSubjectProgress(sub);
+            });
+            return (totalEarned / 930) * 100;
+        }
+
+        function getTotalCompletedChapters() {
+            let count = 0;
+            appState.subjects.forEach(s => {
+                s.chapters.forEach(ch => {
+                    if (getChapterProgress(ch, s.id) >= 99.9) count++;
+                });
+            });
+            return count;
+        }
+
+        function getTotalCompletedSubjects() {
+            return appState.subjects.filter(s => {
+                const prog = getSubjectProgress(s);
+                return s.id === 'ban2' ? prog >= 29.9 : prog >= 99.9;
+            }).length;
+        }
+
+        function getDaysRemaining(targetDateStr) {
+            const today = new Date();
+            today.setHours(0,0,0,0);
+            const target = new Date(targetDateStr);
+            const diffTime = target - today;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            return diffDays > 0 ? diffDays : 0;
+        }
+
+        function switchTab(tabName) {
+            appState.activeTab = tabName;
+            const homeBtn = document.getElementById('nav-home');
+            const dashBtn = document.getElementById('nav-dashboard');
+            const homeIcon = document.getElementById('nav-home-icon');
+            const dashIcon = document.getElementById('nav-dashboard-icon');
+
+            if (tabName === 'home') {
+                homeBtn.className = "flex flex-col items-center gap-1 text-sky-600 font-semibold transition-all duration-200";
+                homeIcon.className = "w-10 h-10 rounded-full flex items-center justify-center bg-sky-50 text-sky-600 shadow-sm";
+                dashBtn.className = "flex flex-col items-center gap-1 text-slate-400 font-medium hover:text-slate-600 transition-all duration-200";
+                dashIcon.className = "w-10 h-10 rounded-full flex items-center justify-center bg-transparent text-slate-400";
+                renderHome();
+            } else {
+                dashBtn.className = "flex flex-col items-center gap-1 text-sky-600 font-semibold transition-all duration-200";
+                dashIcon.className = "w-10 h-10 rounded-full flex items-center justify-center bg-sky-50 text-sky-600 shadow-sm";
+                homeBtn.className = "flex flex-col items-center gap-1 text-slate-400 font-medium hover:text-slate-600 transition-all duration-200";
+                homeIcon.className = "w-10 h-10 rounded-full flex items-center justify-center bg-transparent text-slate-400";
+                renderDashboard();
+            }
+        }
+
+        // --- RENDER HOME PAGE ---
+        function renderHome() {
+            const app = document.getElementById('app');
+            const overallPct = Math.floor(OverallSSCProgress());
+            const completedSubs = getTotalCompletedSubjects();
+            const completedChaps = getTotalCompletedChapters();
+
+            const sscDays = getDaysRemaining(appState.dates.sscExam);
+            const testDays = getDaysRemaining(appState.dates.testExam);
+
+            const activeProfileImg = getDirectImageUrl(appState.user.profileImageUrl || PROFILE_IMAGE_URL);
+
+            const daysOfWeek = ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
+            const jsDay = new Date().getDay();
+            const currentDayIdx = (jsDay + 1) % 7;
+
+            let weekDaysHtml = '';
+            daysOfWeek.forEach((day, idx) => {
+                if (idx === currentDayIdx) {
+                    weekDaysHtml += `<div class="flex-1 py-2 rounded-2xl bg-amber-500 text-white font-bold text-center text-xs shadow-md shadow-amber-500/20 ring-2 ring-amber-400/50 transform scale-105">${day}</div>`;
+                } else if (idx < currentDayIdx) {
+                    weekDaysHtml += `<div class="flex-1 py-2 rounded-2xl bg-emerald-500 text-white font-medium text-center text-xs shadow-sm">${day}</div>`;
+                } else {
+                    weekDaysHtml += `<div class="flex-1 py-2 rounded-2xl bg-white border border-slate-200 text-slate-400 font-medium text-center text-xs">${day}</div>`;
+                }
+            });
+
+            let html = `
+                <!-- TOP HEADER -->
+                <div class="flex items-center justify-between pt-1">
+                    <div class="flex items-center gap-3">
+                        <img src="${activeProfileImg}" alt="Profile" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'" class="w-12 h-12 rounded-full object-cover border-2 border-white shadow-md ring-2 ring-sky-100">
+                        <div>
+                            <h2 class="text-lg font-bold text-slate-800 leading-tight">Hey ${appState.user.name}</h2>
+                            <p class="text-xs text-slate-500 font-medium">${appState.user.subtitle}</p>
+                        </div>
+                    </div>
+                    <button onclick="openNotificationModal()" class="w-11 h-11 rounded-2xl bg-white border border-slate-200/80 shadow-sm flex items-center justify-center text-slate-700 relative hover:bg-slate-50 transition-all">
+                        <i class="fa-regular fa-bell text-lg"></i>
+                    </button>
+                </div>
+
+                <!-- MAIN OVERVIEW CARD (Turquoise #66FFD9 Color Card) -->
+                <div class="rounded-3xl p-6 shadow-xl shadow-teal-500/10 relative overflow-hidden" style="background-color: #66FFD9;">
+                    <div class="absolute -right-8 -bottom-8 w-36 h-36 bg-white/20 rounded-full blur-xl"></div>
+                    <div class="flex items-center justify-between gap-4">
+                        <div class="relative w-28 h-28 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                                <path class="text-slate-900/15" stroke-width="3.8" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                <path stroke="#ffffff" class="transition-all duration-1000 ease-out" stroke-dasharray="${overallPct}, 100" stroke-width="3.8" stroke-linecap="round" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            </svg>
+                            <div class="absolute flex flex-col items-center justify-center">
+                                <span class="text-2xl font-extrabold tracking-tight text-slate-900">${overallPct}%</span>
+                                <span class="text-[10px] text-slate-800 font-bold uppercase tracking-wider">SSC Done</span>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3 flex-1">
+                            <div class="flex items-center gap-2 text-xs font-bold text-slate-900 bg-white/40 backdrop-blur-md px-3 py-2 rounded-xl border border-white/50 shadow-xs">
+                                <i class="fa-solid fa-book-bookmark text-slate-800"></i>
+                                <span>Subject Completed: <strong class="text-slate-950">${completedSubs}/10</strong></span>
+                            </div>
+                            <div class="flex items-center gap-2 text-xs font-bold text-slate-900 bg-white/40 backdrop-blur-md px-3 py-2 rounded-xl border border-white/50 shadow-xs">
+                                <i class="fa-solid fa-layer-group text-slate-800"></i>
+                                <span>Chapters Finished: <strong class="text-slate-950">${completedChaps}</strong></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- COUNTDOWN REMINDERS WITH ANIMATION -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm flex flex-col justify-between">
+                        <span class="text-xs font-semibold text-slate-500 uppercase tracking-wide">SSC Exam</span>
+                        <div class="mt-2 flex items-baseline justify-between">
+                            <span id="home-ssc-days-num" class="text-2xl font-extrabold text-slate-800">440</span>
+                            <span class="text-xs text-slate-400 font-medium">Days left</span>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm flex flex-col justify-between">
+                        <span class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Test Exam</span>
+                        <div class="mt-2 flex items-baseline justify-between">
+                            <span id="home-test-days-num" class="text-2xl font-extrabold text-slate-800">300</span>
+                            <span class="text-xs text-slate-400 font-medium">Days left</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- WEEKLY DAY LIST -->
+                <div class="bg-white rounded-2xl p-3 border border-slate-200/80 shadow-sm">
+                    <div class="flex justify-between items-center mb-2 px-1">
+                        <span class="text-xs font-bold text-slate-600 uppercase tracking-wider">Weekly Tracker</span>
+                        <span class="text-[11px] text-slate-400 font-medium">Sat - Fri</span>
+                    </div>
+                    <div class="flex gap-1.5 justify-between">
+                        ${weekDaysHtml}
+                    </div>
+                </div>
+
+                <!-- SUBJECT CARDS LIST -->
+                <div class="space-y-3.5 pt-1">
+            `;
+
+            appState.subjects.forEach((sub) => {
+                const rawProg = getSubjectProgress(sub);
+                const displayPct = Math.round(rawProg);
+                const chCount = sub.chapters.length;
+
+                let totalCqP = 0, totalMcqP = 0, totalSqP = 0, totalStdP = 0;
+                if (chCount > 0) {
+                    sub.chapters.forEach(ch => {
+                        totalCqP += ch.cqTarget > 0 ? (ch.cqSolved / ch.cqTarget)*100 : 0;
+                        totalMcqP += ch.mcqTarget > 0 ? (ch.mcqSolved / ch.mcqTarget)*100 : 0;
+                        totalSqP += ch.sqTarget > 0 ? (ch.sqSolved / ch.sqTarget)*100 : 0;
+                        totalStdP += ((ch.study.book + ch.study.class + ch.study.summary + ch.study.notes) / 4);
+                    });
+                    totalCqP /= chCount;
+                    totalMcqP /= chCount;
+                    totalSqP /= chCount;
+                    totalStdP /= chCount;
+                }
+
+                const directCover = getDirectImageUrl(sub.coverUrl);
+
+                let subBarsHtml = '';
+                if (sub.id === 'ban2') {
+                    subBarsHtml = `
+                        <div class="grid grid-cols-2 gap-1.5 mt-3 pt-3 border-t border-slate-100">
+                            <div class="bg-slate-100/80 rounded-full h-4 relative overflow-hidden flex items-center px-2">
+                                <div class="absolute left-0 top-0 bottom-0 rounded-full opacity-30" style="width: ${totalStdP}%; background-color: ${sub.themeColor};"></div>
+                                <span class="text-[9px] font-semibold text-slate-600 z-10 truncate">Study</span>
+                            </div>
+                            <div class="bg-slate-100/80 rounded-full h-4 relative overflow-hidden flex items-center px-2">
+                                <div class="absolute left-0 top-0 bottom-0 rounded-full opacity-30" style="width: ${totalMcqP}%; background-color: ${sub.themeColor};"></div>
+                                <span class="text-[9px] font-semibold text-slate-600 z-10 truncate">MCQ</span>
+                            </div>
+                        </div>
+                    `;
+                } else if (sub.id === 'ict') {
+                    subBarsHtml = `
+                        <div class="grid grid-cols-3 gap-1.5 mt-3 pt-3 border-t border-slate-100">
+                            <div class="bg-slate-100/80 rounded-full h-4 relative overflow-hidden flex items-center px-2">
+                                <div class="absolute left-0 top-0 bottom-0 rounded-full opacity-30" style="width: ${totalStdP}%; background-color: ${sub.themeColor};"></div>
+                                <span class="text-[9px] font-semibold text-slate-600 z-10 truncate">Study</span>
+                            </div>
+                            <div class="bg-slate-100/80 rounded-full h-4 relative overflow-hidden flex items-center px-2">
+                                <div class="absolute left-0 top-0 bottom-0 rounded-full opacity-30" style="width: ${totalMcqP}%; background-color: ${sub.themeColor};"></div>
+                                <span class="text-[9px] font-semibold text-slate-600 z-10 truncate">MCQ</span>
+                            </div>
+                            <div class="bg-slate-100/80 rounded-full h-4 relative overflow-hidden flex items-center px-2">
+                                <div class="absolute left-0 top-0 bottom-0 rounded-full opacity-30" style="width: ${totalSqP}%; background-color: ${sub.themeColor};"></div>
+                                <span class="text-[9px] font-semibold text-slate-600 z-10 truncate">SQ</span>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    subBarsHtml = `
+                        <div class="grid grid-cols-4 gap-1.5 mt-3 pt-3 border-t border-slate-100">
+                            <div class="bg-slate-100/80 rounded-full h-4 relative overflow-hidden flex items-center px-2">
+                                <div class="absolute left-0 top-0 bottom-0 rounded-full opacity-30" style="width: ${totalStdP}%; background-color: ${sub.themeColor};"></div>
+                                <span class="text-[9px] font-semibold text-slate-600 z-10 truncate">Study</span>
+                            </div>
+                            <div class="bg-slate-100/80 rounded-full h-4 relative overflow-hidden flex items-center px-2">
+                                <div class="absolute left-0 top-0 bottom-0 rounded-full opacity-30" style="width: ${totalCqP}%; background-color: ${sub.themeColor};"></div>
+                                <span class="text-[9px] font-semibold text-slate-600 z-10 truncate">CQ</span>
+                            </div>
+                            <div class="bg-slate-100/80 rounded-full h-4 relative overflow-hidden flex items-center px-2">
+                                <div class="absolute left-0 top-0 bottom-0 rounded-full opacity-30" style="width: ${totalMcqP}%; background-color: ${sub.themeColor};"></div>
+                                <span class="text-[9px] font-semibold text-slate-600 z-10 truncate">MCQ</span>
+                            </div>
+                            <div class="bg-slate-100/80 rounded-full h-4 relative overflow-hidden flex items-center px-2">
+                                <div class="absolute left-0 top-0 bottom-0 rounded-full opacity-30" style="width: ${totalSqP}%; background-color: ${sub.themeColor};"></div>
+                                <span class="text-[9px] font-semibold text-slate-600 z-10 truncate">SQ</span>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                html += `
+                    <div onclick="openSubjectModal('${sub.id}')" class="bg-white rounded-2xl p-4 border border-slate-200/90 shadow-sm hover:shadow-md transition-all cursor-pointer relative overflow-hidden group">
+                        <div class="flex items-center gap-3.5">
+                            <img src="${directCover}" alt="${sub.name}" class="w-14 h-16 rounded-xl object-cover shadow-sm flex-shrink-0 group-hover:scale-105 transition-transform duration-300">
+                            
+                            <div class="flex-1 min-w-0">
+                                <h4 class="font-bold text-slate-800 text-sm md:text-base truncate leading-snug">${sub.name}</h4>
+                                <span class="text-xs text-slate-400 font-medium">${sub.chapters.length} Chapters</span>
+                            </div>
+
+                            <div class="relative w-12 h-12 flex items-center justify-center flex-shrink-0">
+                                <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                                    <path class="text-slate-100" stroke-width="3.5" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                    <path style="color: ${sub.themeColor};" stroke-dasharray="${sub.id==='ban2' ? Math.round((displayPct/30)*100) : displayPct}, 100" stroke-width="3.5" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                </svg>
+                                <span class="absolute text-xs font-bold text-slate-700">${displayPct}%</span>
+                            </div>
+                        </div>
+                        ${subBarsHtml}
+                    </div>
+                `;
+            });
+
+            html += `</div>`;
+            app.innerHTML = html;
+
+            animateNumber('home-ssc-days-num', 440, sscDays, 1200);
+            animateNumber('home-test-days-num', 300, testDays, 1200);
+        }
+
+        // --- SUBJECT VIEW MODAL ---
+        let currentSort = 'default';
+
+        function openSubjectModal(subId) {
+            const sub = appState.subjects.find(s => s.id === subId);
+            if (!sub) return;
+
+            let chapters = [...sub.chapters];
+
+            if (currentSort === 'progress-asc') {
+                chapters.sort((a,b) => getChapterProgress(a, sub.id) - getChapterProgress(b, sub.id));
+            } else if (currentSort === 'progress-desc') {
+                chapters.sort((a,b) => getChapterProgress(b, sub.id) - getChapterProgress(a, sub.id));
+            } else if (currentSort === 'imp-mcq') {
+                chapters.sort((a,b) => (b.mcqPastCount||0) - (a.mcqPastCount||0));
+            } else if (currentSort === 'imp-cq') {
+                chapters.sort((a,b) => (b.cqPastCount||0) - (a.cqPastCount||0));
+            }
+
+            const subPct = getSubjectProgress(sub).toFixed(1);
+
+            let chaptersHtml = '';
+            chapters.forEach((ch) => {
+                const chPct = getChapterProgress(ch, sub.id).toFixed(1);
+                
+                let pillsHtml = '';
+                if (sub.id === 'ban2') {
+                    pillsHtml = `
+                        <div class="grid grid-cols-2 gap-1.5 pt-1">
+                            <div class="text-[10px] text-center py-1 rounded-lg bg-slate-50 border border-slate-100 font-medium text-slate-600">
+                                Study: ${Math.round((ch.study.book+ch.study.class+ch.study.summary+ch.study.notes)/4)}%
+                            </div>
+                            <div class="text-[10px] text-center py-1 rounded-lg bg-slate-50 border border-slate-100 font-medium text-slate-600">
+                                MCQ: ${ch.mcqTarget > 0 ? Math.round((ch.mcqSolved/ch.mcqTarget)*100) : 0}%
+                            </div>
+                        </div>
+                    `;
+                } else if (sub.id === 'ict') {
+                    pillsHtml = `
+                        <div class="grid grid-cols-3 gap-1.5 pt-1">
+                            <div class="text-[10px] text-center py-1 rounded-lg bg-slate-50 border border-slate-100 font-medium text-slate-600">
+                                Study: ${Math.round((ch.study.book+ch.study.class+ch.study.summary+ch.study.notes)/4)}%
+                            </div>
+                            <div class="text-[10px] text-center py-1 rounded-lg bg-slate-50 border border-slate-100 font-medium text-slate-600">
+                                MCQ: ${ch.mcqTarget > 0 ? Math.round((ch.mcqSolved/ch.mcqTarget)*100) : 0}%
+                            </div>
+                            <div class="text-[10px] text-center py-1 rounded-lg bg-slate-50 border border-slate-100 font-medium text-slate-600">
+                                SQ: ${ch.sqTarget > 0 ? Math.round((ch.sqSolved/ch.sqTarget)*100) : 0}%
+                            </div>
+                        </div>
+                    `;
+                } else if (sub.id === 'ban1' && ch.origNum >= 31 && ch.origNum <= 32) {
+                    pillsHtml = `
+                        <div class="grid grid-cols-3 gap-1.5 pt-1">
+                            <div class="text-[10px] text-center py-1 rounded-lg bg-slate-50 border border-slate-100 font-medium text-slate-600">
+                                Study: ${Math.round((ch.study.book+ch.study.class+ch.study.summary+ch.study.notes)/4)}%
+                            </div>
+                            <div class="text-[10px] text-center py-1 rounded-lg bg-slate-50 border border-slate-100 font-medium text-slate-600">
+                                CQ: ${ch.cqTarget > 0 ? Math.round((ch.cqSolved/ch.cqTarget)*100) : 0}%
+                            </div>
+                            <div class="text-[10px] text-center py-1 rounded-lg bg-slate-50 border border-slate-100 font-medium text-slate-600">
+                                MCQ: ${ch.mcqTarget > 0 ? Math.round((ch.mcqSolved/ch.mcqTarget)*100) : 0}%
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    pillsHtml = `
+                        <div class="grid grid-cols-4 gap-1.5 pt-1">
+                            <div class="text-[10px] text-center py-1 rounded-lg bg-slate-50 border border-slate-100 font-medium text-slate-600">
+                                Study: ${Math.round((ch.study.book+ch.study.class+ch.study.summary+ch.study.notes)/4)}%
+                            </div>
+                            <div class="text-[10px] text-center py-1 rounded-lg bg-slate-50 border border-slate-100 font-medium text-slate-600">
+                                CQ: ${ch.cqTarget > 0 ? Math.round((ch.cqSolved/ch.cqTarget)*100) : 0}%
+                            </div>
+                            <div class="text-[10px] text-center py-1 rounded-lg bg-slate-50 border border-slate-100 font-medium text-slate-600">
+                                MCQ: ${ch.mcqTarget > 0 ? Math.round((ch.mcqSolved/ch.mcqTarget)*100) : 0}%
+                            </div>
+                            <div class="text-[10px] text-center py-1 rounded-lg bg-slate-50 border border-slate-100 font-medium text-slate-600">
+                                SQ: ${ch.sqTarget > 0 ? Math.round((ch.sqSolved/ch.sqTarget)*100) : 0}%
+                            </div>
+                        </div>
+                    `;
+                }
+
+                chaptersHtml += `
+                    <div onclick="openChapterDetailModal('${sub.id}', '${ch.id}')" class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm hover:shadow-md transition-all cursor-pointer space-y-2.5">
+                        <div class="flex items-center justify-between gap-3">
+                            <div class="flex items-center gap-2.5">
+                                <span class="w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs text-white shadow-sm flex-shrink-0" style="background-color: ${sub.themeColor}">${ch.origNum}</span>
+                                <h5 class="font-bold text-slate-800 text-sm leading-snug">${ch.name}</h5>
+                            </div>
+                            <span class="text-xs font-extrabold text-slate-700 bg-slate-100 px-2.5 py-1 rounded-full">${chPct}%</span>
+                        </div>
+
+                        <div class="bg-slate-100 rounded-full h-3 relative overflow-hidden">
+                            <div class="h-full rounded-full transition-all duration-500" style="width: ${chPct}%; background-color: ${sub.themeColor}; opacity: 0.85;"></div>
+                        </div>
+
+                        ${pillsHtml}
+                    </div>
+                `;
+            });
+
+            const contentHtml = `
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-bold uppercase tracking-wider text-slate-400 px-2 py-1 bg-slate-100 rounded-lg">${sub.enName}</span>
+                            <h3 class="text-lg font-extrabold text-slate-800">${sub.name}</h3>
+                        </div>
+                        <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+
+                    <div class="rounded-2xl p-5 text-white shadow-md flex items-center justify-between" style="background-color: ${sub.themeColor}">
+                        <div>
+                            <span class="text-xs opacity-90 font-medium uppercase tracking-wider">Subject Progress</span>
+                            <h2 class="text-3xl font-extrabold mt-0.5">${subPct}% ${sub.id==='ban2' ? '<span class="text-xs opacity-90 font-normal">(Max 30%)</span>' : ''}</h2>
+                            <p class="text-xs opacity-80 mt-1">${sub.chapters.length} Chapters Total</p>
+                        </div>
+                        <i class="fa-solid fa-book-open text-4xl opacity-30"></i>
+                    </div>
+
+                    <div class="flex items-center gap-2 overflow-x-auto pb-1 text-xs">
+                        <span class="text-slate-400 font-medium flex-shrink-0">Sort By:</span>
+                        <button onclick="setSubjectSort('${sub.id}', 'default')" class="px-3 py-1.5 rounded-full border ${currentSort === 'default' ? 'bg-slate-800 text-white border-slate-800' : 'bg-white text-slate-600 border-slate-200'} font-medium flex-shrink-0">Chapter Order</button>
+                        <button onclick="setSubjectSort('${sub.id}', 'progress-asc')" class="px-3 py-1.5 rounded-full border ${currentSort === 'progress-asc' ? 'bg-slate-800 text-white border-slate-800' : 'bg-white text-slate-600 border-slate-200'} font-medium flex-shrink-0">Progress <i class="fa-solid fa-arrow-up text-[10px]"></i></button>
+                        <button onclick="setSubjectSort('${sub.id}', 'progress-desc')" class="px-3 py-1.5 rounded-full border ${currentSort === 'progress-desc' ? 'bg-slate-800 text-white border-slate-800' : 'bg-white text-slate-600 border-slate-200'} font-medium flex-shrink-0">Progress <i class="fa-solid fa-arrow-down text-[10px]"></i></button>
+                        ${sub.id !== 'ban2' && sub.id !== 'ict' ? `<button onclick="setSubjectSort('${sub.id}', 'imp-cq')" class="px-3 py-1.5 rounded-full border ${currentSort === 'imp-cq' ? 'bg-slate-800 text-white border-slate-800' : 'bg-white text-slate-600 border-slate-200'} font-medium flex-shrink-0">CQ Imp</button>` : ''}
+                        <button onclick="setSubjectSort('${sub.id}', 'imp-mcq')" class="px-3 py-1.5 rounded-full border ${currentSort === 'imp-mcq' ? 'bg-slate-800 text-white border-slate-800' : 'bg-white text-slate-600 border-slate-200'} font-medium flex-shrink-0">MCQ Imp</button>
+                    </div>
+
+                    <div class="space-y-3">
+                        ${chaptersHtml}
+                    </div>
+                </div>
+            `;
+
+            showModal(contentHtml);
+        }
+
+        function setSubjectSort(subId, sortType) {
+            currentSort = sortType;
+            openSubjectModal(subId);
+        }
+
+        // --- CHAPTER DETAIL & PROGRESS UPDATE MODAL ---
+        function openChapterDetailModal(subId, chId, isTemp = false) {
+            const sub = appState.subjects.find(s => s.id === subId);
+            const realCh = sub.chapters.find(c => c.id === chId);
+            if (!sub || !realCh) return;
+
+            if (!isTemp) {
+                // Clone state into temp for editing
+                tempChapterState = JSON.parse(JSON.stringify(realCh));
+            }
+            const ch = tempChapterState;
+
+            const chPct = getChapterProgress(ch, sub.id).toFixed(1);
+
+            let inputsHtml = `
+                <div onclick="openStudySegmentModal('${sub.id}', '${ch.id}')" class="bg-white p-3 rounded-2xl border border-slate-200/80 flex items-center justify-between cursor-pointer hover:bg-slate-50">
+                    <div class="flex items-center gap-2.5">
+                        <i class="fa-solid fa-book-open-reader text-sky-600 drop-shadow-sm"></i>
+                        <span class="text-xs font-bold text-slate-700">Study Progress</span>
+                    </div>
+                    <span class="text-xs font-extrabold text-slate-800 bg-slate-100 px-2 py-1 rounded-lg">${Math.round((ch.study.book+ch.study.class+ch.study.summary+ch.study.notes)/4)}%</span>
+                </div>
+            `;
+
+            if (sub.id !== 'ban2' && sub.id !== 'ict') {
+                inputsHtml += `
+                    <div class="bg-white p-3 rounded-2xl border border-slate-200/80 space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-slate-700"><i class="fa-solid fa-pen-to-square text-emerald-600 mr-1.5"></i> CQ Questions</span>
+                            <span class="text-xs font-semibold text-slate-500">${ch.cqSolved} / ${ch.cqTarget}</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="adjustTempCount('${sub.id}', '${ch.id}', 'cqSolved', -1)" class="w-8 h-8 rounded-xl bg-slate-100 font-bold text-slate-700 hover:bg-slate-200">-</button>
+                            <input type="number" value="${ch.cqSolved}" onchange="setTempCount('${sub.id}', '${ch.id}', 'cqSolved', this.value)" class="flex-1 text-center bg-slate-50 border border-slate-200 rounded-xl py-1 text-xs font-bold text-slate-800">
+                            <button onclick="adjustTempCount('${sub.id}', '${ch.id}', 'cqSolved', 1)" class="w-8 h-8 rounded-xl bg-slate-100 font-bold text-slate-700 hover:bg-slate-200">+</button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            inputsHtml += `
+                <div class="bg-white p-3 rounded-2xl border border-slate-200/80 space-y-2">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-slate-700"><i class="fa-solid fa-list-check text-purple-600 mr-1.5"></i> MCQ Questions</span>
+                        <span class="text-xs font-semibold text-slate-500">${ch.mcqSolved} / ${ch.mcqTarget}</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="adjustTempCount('${sub.id}', '${ch.id}', 'mcqSolved', -5)" class="w-8 h-8 rounded-xl bg-slate-100 font-bold text-slate-700 hover:bg-slate-200">-5</button>
+                        <input type="number" value="${ch.mcqSolved}" onchange="setTempCount('${sub.id}', '${ch.id}', 'mcqSolved', this.value)" class="flex-1 text-center bg-slate-50 border border-slate-200 rounded-xl py-1 text-xs font-bold text-slate-800">
+                        <button onclick="adjustTempCount('${sub.id}', '${ch.id}', 'mcqSolved', 5)" class="w-8 h-8 rounded-xl bg-slate-100 font-bold text-slate-700 hover:bg-slate-200">+5</button>
+                    </div>
+                </div>
+            `;
+
+            if (sub.id !== 'ban2' && !(sub.id === 'ban1' && ch.origNum >= 31 && ch.origNum <= 32)) {
+                inputsHtml += `
+                    <div class="bg-white p-3 rounded-2xl border border-slate-200/80 space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-slate-700"><i class="fa-solid fa-align-left text-amber-600 mr-1.5"></i> SQ Questions</span>
+                            <span class="text-xs font-semibold text-slate-500">${ch.sqSolved} / ${ch.sqTarget}</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="adjustTempCount('${sub.id}', '${ch.id}', 'sqSolved', -1)" class="w-8 h-8 rounded-xl bg-slate-100 font-bold text-slate-700 hover:bg-slate-200">-</button>
+                            <input type="number" value="${ch.sqSolved}" onchange="setTempCount('${sub.id}', '${ch.id}', 'sqSolved', this.value)" class="flex-1 text-center bg-slate-50 border border-slate-200 rounded-xl py-1 text-xs font-bold text-slate-800">
+                            <button onclick="adjustTempCount('${sub.id}', '${ch.id}', 'sqSolved', 1)" class="w-8 h-8 rounded-xl bg-slate-100 font-bold text-slate-700 hover:bg-slate-200">+</button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            const contentHtml = `
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 px-2 py-0.5 bg-slate-100 rounded-md">Chapter ${ch.origNum}</span>
+                            <h3 class="text-base font-extrabold text-slate-800 mt-0.5">${ch.name}</h3>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <button onclick="openSubjectModal('${sub.id}')" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200" title="Cancel">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                            <button onclick="saveChapterProgress('${sub.id}', '${ch.id}')" class="w-8 h-8 rounded-full text-white flex items-center justify-center shadow-sm hover:brightness-110 active:scale-95 transition-all" style="background-color: ${sub.themeColor};" title="Save">
+                                <i class="fa-solid fa-check text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200/80 space-y-2">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs font-bold text-slate-600">Chapter Progress</span>
+                            <span class="text-sm font-extrabold text-slate-800">${chPct}%</span>
+                        </div>
+                        <div class="bg-slate-200 rounded-full h-3.5 relative overflow-hidden">
+                            <div class="h-full rounded-full transition-all duration-500" style="width: ${chPct}%; background-color: ${sub.themeColor}"></div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Update Progress Segments</span>
+                        ${inputsHtml}
+                    </div>
+                </div>
+            `;
+
+            showModal(contentHtml);
+        }
+
+        function saveChapterProgress(subId, chId) {
+            const sub = appState.subjects.find(s => s.id === subId);
+            const realCh = sub?.chapters.find(c => c.id === chId);
+            if (realCh && tempChapterState) {
+                Object.assign(realCh, tempChapterState);
+                realCh.lastStudied = new Date().toISOString().split('T')[0];
+                saveStorage();
+            }
+            openSubjectModal(subId);
+            if (appState.activeTab === 'home') renderHome();
+            else renderDashboard();
+        }
+
+        function openStudySegmentModal(subId, chId) {
+            const sub = appState.subjects.find(s => s.id === subId);
+            const ch = tempChapterState || sub.chapters.find(c => c.id === chId);
+            tempStudySnapshot = ch ? JSON.parse(JSON.stringify(ch.study)) : null;
+
+            const contentHtml = `
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-base font-extrabold text-slate-800">Study Details Breakdown</h3>
+                        <button onclick="cancelStudySegmentModal('${sub.id}', '${ch.id}')" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+
+                    <div class="space-y-3">
+                        <div>
+                            <div class="flex justify-between text-xs font-bold text-slate-700 mb-1">
+                                <span>Book Reading</span>
+                                <span id="val-study-book">${ch.study.book}%</span>
+                            </div>
+                            <input type="range" min="0" max="100" value="${ch.study.book}" style="--slider-color: ${sub.themeColor}" oninput="updateStudyValLive('${sub.id}', '${ch.id}', 'book', this.value)" class="w-full">
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs font-bold text-slate-700 mb-1">
+                                <span>Online Class</span>
+                                <span id="val-study-class">${ch.study.class}%</span>
+                            </div>
+                            <input type="range" min="0" max="100" value="${ch.study.class}" style="--slider-color: ${sub.themeColor}" oninput="updateStudyValLive('${sub.id}', '${ch.id}', 'class', this.value)" class="w-full">
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs font-bold text-slate-700 mb-1">
+                                <span>Guide Summary</span>
+                                <span id="val-study-summary">${ch.study.summary}%</span>
+                            </div>
+                            <input type="range" min="0" max="100" value="${ch.study.summary}" style="--slider-color: ${sub.themeColor}" oninput="updateStudyValLive('${sub.id}', '${ch.id}', 'summary', this.value)" class="w-full">
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs font-bold text-slate-700 mb-1">
+                                <span>Hand Notes</span>
+                                <span id="val-study-notes">${ch.study.notes}%</span>
+                            </div>
+                            <input type="range" min="0" max="100" value="${ch.study.notes}" style="--slider-color: ${sub.themeColor}" oninput="updateStudyValLive('${sub.id}', '${ch.id}', 'notes', this.value)" class="w-full">
+                        </div>
+                    </div>
+
+                    <button onclick="finishStudySegmentModal('${sub.id}', '${ch.id}')" style="background-color: ${sub.themeColor};" class="w-full py-2.5 text-white font-bold text-xs rounded-xl shadow-md hover:brightness-110 active:scale-95 transition-all">Done</button>
+                </div>
+            `;
+            showModal(contentHtml);
+        }
+
+        function finishStudySegmentModal(subId, chId) {
+            tempStudySnapshot = null;
+            openChapterDetailModal(subId, chId, true);
+        }
+
+        function cancelStudySegmentModal(subId, chId) {
+            if (tempChapterState && tempStudySnapshot) {
+                tempChapterState.study = JSON.parse(JSON.stringify(tempStudySnapshot));
+            }
+            tempStudySnapshot = null;
+            openChapterDetailModal(subId, chId, true);
+        }
+
+        function updateStudyValLive(subId, chId, key, val) {
+            if (tempChapterState) {
+                tempChapterState.study[key] = parseInt(val) || 0;
+            }
+            const labelEl = document.getElementById(`val-study-${key}`);
+            if (labelEl) {
+                labelEl.textContent = `${val}%`;
+            }
+        }
+
+        function adjustTempCount(subId, chId, key, delta) {
+            if (tempChapterState) {
+                tempChapterState[key] = Math.max(0, (tempChapterState[key] || 0) + delta);
+            }
+            openChapterDetailModal(subId, chId, true);
+        }
+
+        function setTempCount(subId, chId, key, val) {
+            if (tempChapterState) {
+                tempChapterState[key] = Math.max(0, parseInt(val) || 0);
+            }
+            openChapterDetailModal(subId, chId, true);
+        }
+
+        function openNotificationModal() {
+            let pendingChaps = [];
+            let unstudiedChaps = [];
+            let longAgoChaps = [];
+            const today = new Date();
+
+            appState.subjects.forEach(sub => {
+                sub.chapters.forEach(ch => {
+                    const pct = getChapterProgress(ch, sub.id);
+                    if (pct === 0) {
+                        unstudiedChaps.push({ sub, ch, pct });
+                    } else if (pct < 100) {
+                        pendingChaps.push({ sub, ch, pct });
+                    }
+
+                    if (ch.lastStudied) {
+                        const past = new Date(ch.lastStudied);
+                        const diffDays = Math.floor((today - past) / (1000 * 60 * 60 * 24));
+                        if (diffDays >= (sub.longDaysLimit || 15)) {
+                            longAgoChaps.push({ sub, ch, diffDays });
+                        }
+                    }
+                });
+            });
+
+            let contentHtml = `
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-base font-extrabold text-slate-800"><i class="fa-solid fa-bell text-sky-600 mr-2"></i>Notifications & Alerts</h3>
+                        <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+
+                    <div class="space-y-4 max-h-[60vh] overflow-y-auto pr-1">
+            `;
+
+            if (unstudiedChaps.length > 0) {
+                contentHtml += `
+                    <div>
+                        <h5 class="text-xs font-bold text-rose-600 uppercase tracking-wider mb-2">0% Touch Chapters (${unstudiedChaps.length})</h5>
+                        <div class="space-y-2">
+                            ${unstudiedChaps.map(item => `
+                                <div onclick="openChapterDetailModal('${item.sub.id}', '${item.ch.id}')" class="p-3 bg-rose-50 border border-rose-100 rounded-xl flex justify-between items-center cursor-pointer hover:bg-rose-100/60">
+                                    <div>
+                                        <h6 class="font-bold text-xs text-slate-800">${item.ch.name}</h6>
+                                        <span class="text-[10px] text-slate-500">${item.sub.name}</span>
+                                    </div>
+                                    <span class="text-xs font-bold text-rose-600">0%</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (longAgoChaps.length > 0) {
+                contentHtml += `
+                    <div>
+                        <h5 class="text-xs font-bold text-amber-600 uppercase tracking-wider mb-2">Not Studied Recently (${longAgoChaps.length})</h5>
+                        <div class="space-y-2">
+                            ${longAgoChaps.map(item => `
+                                <div onclick="openChapterDetailModal('${item.sub.id}', '${item.ch.id}')" class="p-3 bg-amber-50 border border-amber-100 rounded-xl flex justify-between items-center cursor-pointer hover:bg-amber-100/60">
+                                    <div>
+                                        <h6 class="font-bold text-xs text-slate-800">${item.ch.name}</h6>
+                                        <span class="text-[10px] text-slate-500">${item.sub.name}</span>
+                                    </div>
+                                    <span class="text-xs font-bold text-amber-700">${item.diffDays} Days Ago</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (pendingChaps.length > 0) {
+                contentHtml += `
+                    <div>
+                        <h5 class="text-xs font-bold text-sky-600 uppercase tracking-wider mb-2">Attention Needed (${pendingChaps.length})</h5>
+                        <div class="space-y-2">
+                            ${pendingChaps.map(item => `
+                                <div onclick="openChapterDetailModal('${item.sub.id}', '${item.ch.id}')" class="p-3 bg-sky-50 border border-sky-100 rounded-xl flex justify-between items-center cursor-pointer hover:bg-sky-100/60">
+                                    <div>
+                                        <h6 class="font-bold text-xs text-slate-800">${item.ch.name}</h6>
+                                        <span class="text-[10px] text-slate-500">${item.sub.name}</span>
+                                    </div>
+                                    <span class="text-xs font-bold text-sky-700">${Math.round(item.pct)}%</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            contentHtml += `
+                    </div>
+                </div>
+            `;
+            showModal(contentHtml);
+        }
+
+        // --- DASHBOARD PAGE ---
+        let currentBoardImpMode = 'CQ';
+        let selectedDashSubId = null;
+
+        function renderDashboard() {
+            const app = document.getElementById('app');
+
+            if (!selectedDashSubId || !appState.subjects.some(s => s.id === selectedDashSubId)) {
+                selectedDashSubId = appState.subjects[0].id;
+            }
+
+            const sscWeeks = Math.floor(getDaysRemaining(appState.dates.sscExam) / 7);
+            const testWeeks = Math.floor(getDaysRemaining(appState.dates.testExam) / 7);
+
+            const jsDay = new Date().getDay();
+            const currentDayIdx = (jsDay + 1) % 7;
+
+            let plotDaysCount = appState.weekOffset < 0 ? 7 : currentDayIdx;
+
+            const dayCoords = [
+                {x: 10, y: 80},  // Sat
+                {x: 55, y: 65},  // Sun
+                {x: 100, y: 70}, // Mon
+                {x: 145, y: 45}, // Tue
+                {x: 190, y: 50}, // Wed
+                {x: 235, y: 30}, // Thu
+                {x: 280, y: 20}  // Fri
+            ];
+
+            let pathD = "";
+            let areaD = "";
+
+            // Smooth cubic curve through the same weekly points. The visual style
+            // remains unchanged; only the line interpolation is smoothed.
+            function buildSmoothPath(points) {
+                if (!points.length) return '';
+                if (points.length === 1) return `M ${points[0].x} ${points[0].y}`;
+                let d = `M ${points[0].x} ${points[0].y}`;
+                for (let i = 0; i < points.length - 1; i++) {
+                    const p0 = points[i - 1] || points[i];
+                    const p1 = points[i];
+                    const p2 = points[i + 1];
+                    const p3 = points[i + 2] || p2;
+                    const cp1x = p1.x + (p2.x - p0.x) / 6;
+                    const cp1y = p1.y + (p2.y - p0.y) / 6;
+                    const cp2x = p2.x - (p3.x - p1.x) / 6;
+                    const cp2y = p2.y - (p3.y - p1.y) / 6;
+                    d += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${p2.x} ${p2.y}`;
+                }
+                return d;
+            }
+
+            if (plotDaysCount > 0) {
+                const plotPoints = dayCoords.slice(0, plotDaysCount);
+                pathD = buildSmoothPath(plotPoints);
+                const lastX = plotPoints[plotPoints.length - 1].x;
+                areaD = `${pathD} L ${lastX} 100 L ${plotPoints[0].x} 100 Z`;
+            }
+
+            let html = `
+                <div class="flex items-center justify-between pt-1">
+                    <h2 class="text-xl font-extrabold text-slate-800">Dashboard & Analytics</h2>
+                    <div class="flex items-center gap-2">
+                        <button onclick="openSettingsModal()" class="w-10 h-10 rounded-2xl bg-white border border-slate-200/80 shadow-sm flex items-center justify-center text-slate-700 hover:bg-slate-50">
+                            <i class="fa-solid fa-gear text-base"></i>
+                        </button>
+                        <button onclick="openNotificationModal()" class="w-10 h-10 rounded-2xl bg-white border border-slate-200/80 shadow-sm flex items-center justify-center text-slate-700 hover:bg-slate-50">
+                            <i class="fa-regular fa-bell text-base"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- DASHBOARD COUNTDOWN REMINDERS -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div style="background-color: #a6f799;" class="rounded-2xl p-4 text-slate-900 shadow-md shadow-emerald-500/10 border border-emerald-200/50">
+                        <span class="text-[11px] uppercase font-extrabold text-slate-800 tracking-wider opacity-80">SSC Countdown</span>
+                        <div class="mt-1 flex items-baseline justify-between">
+                            <span id="dash-ssc-weeks-num" class="text-2xl font-extrabold text-slate-900">62</span>
+                            <span class="text-xs text-slate-800 font-medium">Weeks left</span>
+                        </div>
+                    </div>
+                    <div style="background-color: #f7d699;" class="rounded-2xl p-4 text-slate-900 shadow-md shadow-amber-500/10 border border-amber-200/50">
+                        <span class="text-[11px] uppercase font-extrabold text-slate-800 tracking-wider opacity-80">Test Countdown</span>
+                        <div class="mt-1 flex items-baseline justify-between">
+                            <span id="dash-test-weeks-num" class="text-2xl font-extrabold text-slate-900">42</span>
+                            <span class="text-xs text-slate-800 font-medium">Weeks left</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- WEEKLY / MONTHLY GRAPH CARD -->
+                <div id="weekly-progress-card" class="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-sm space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <button onclick="changeWeekOffset(-1)" class="w-7 h-7 rounded-lg bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-200">
+                                <i class="fa-solid fa-chevron-left text-xs"></i>
+                            </button>
+                            <h4 class="text-sm font-bold text-slate-800">
+                                ${appState.weekOffset === 0 ? 'This Week Progress' : 'Pre Week Progress'}
+                            </h4>
+                            ${appState.weekOffset < 0 ? `
+                                <button onclick="changeWeekOffset(1)" class="w-7 h-7 rounded-lg bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-200">
+                                    <i class="fa-solid fa-chevron-right text-xs"></i>
+                                </button>
+                            ` : ''}
+                        </div>
+                        <div class="flex bg-slate-100 p-1 rounded-xl text-xs font-bold">
+                            <button class="px-3 py-1 bg-white rounded-lg text-slate-800 shadow-sm">Weekly</button>
+                            <button class="px-3 py-1 rounded-lg text-slate-400 opacity-50 cursor-not-allowed" title="Locked: Needs 1 month completion">Monthly <i class="fa-solid fa-lock text-[9px] ml-0.5"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="h-36 w-full pt-2">
+                        <svg class="w-full h-full overflow-visible" viewBox="0 0 300 100">
+                            ${areaD ? `<path d="${areaD}" fill="url(#grad-turquoise)" opacity="0.25"/>` : ''}
+                            ${pathD ? `<path d="${pathD}" fill="none" stroke="#06b6d4" stroke-width="3" stroke-linecap="round"/>` : ''}
+                            ${plotDaysCount > 0 ? (() => { const pts = dayCoords.slice(0, plotDaysCount); const last = pts[pts.length - 1]; return `<circle cx="${pts[0].x}" cy="${pts[0].y}" r="4" fill="#06b6d4" stroke="#ffffff" stroke-width="2"/>${pts.length > 1 ? `<circle cx="${last.x}" cy="${last.y}" r="4" fill="#06b6d4" stroke="#ffffff" stroke-width="2"/>` : ''}`; })() : ''}
+                            <defs>
+                                <linearGradient id="grad-turquoise" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" stop-color="#06b6d4" />
+                                    <stop offset="100%" stop-color="#ffffff" />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <div class="flex justify-between text-[10px] font-bold text-slate-400 border-t border-slate-100 pt-2 px-1">
+                        <span class="${currentDayIdx === 0 && appState.weekOffset === 0 ? 'text-cyan-600 font-extrabold' : ''}">Sat</span>
+                        <span class="${currentDayIdx === 1 && appState.weekOffset === 0 ? 'text-cyan-600 font-extrabold' : ''}">Sun</span>
+                        <span class="${currentDayIdx === 2 && appState.weekOffset === 0 ? 'text-cyan-600 font-extrabold' : ''}">Mon</span>
+                        <span class="${currentDayIdx === 3 && appState.weekOffset === 0 ? 'text-cyan-600 font-extrabold' : ''}">Tue</span>
+                        <span class="${currentDayIdx === 4 && appState.weekOffset === 0 ? 'text-cyan-600 font-extrabold' : ''}">Wed</span>
+                        <span class="${currentDayIdx === 5 && appState.weekOffset === 0 ? 'text-cyan-600 font-extrabold' : ''}">Thu</span>
+                        <span class="${currentDayIdx === 6 && appState.weekOffset === 0 ? 'text-cyan-600 font-extrabold' : ''}">Fri</span>
+                    </div>
+                </div>
+
+                <!-- CHAPTER BOARD IMPORTANCE GRAPH CARD -->
+                <div id="chapter-importance-card" class="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-sm space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h4 class="text-sm font-bold text-slate-800">Chapter Board Importance</h4>
+                        </div>
+                        <!-- CUSTOM SUBJECT SELECTION DROPDOWN -->
+                        <div class="relative" id="dash-sub-dropdown-wrap">
+                            <button type="button" onclick="toggleDashSubDropdown(event)" id="dash-sub-select-btn" class="flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs font-bold text-slate-700 outline-none focus:ring-2 focus:ring-sky-200 transition-all hover:bg-slate-100 active:scale-95">
+                                <span id="dash-sub-select-label" class="truncate max-w-[110px]">${(appState.subjects.find(s => s.id === selectedDashSubId) || appState.subjects[0]).name}</span>
+                                <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 transition-transform duration-200" id="dash-sub-select-chevron"></i>
+                            </button>
+                            <div id="dash-sub-dropdown-list" class="hidden absolute right-0 top-full mt-2 w-48 max-h-72 overflow-y-auto bg-white border border-slate-200 rounded-2xl shadow-2xl z-30 p-1.5 space-y-0.5 origin-top-right transition-all duration-150">
+                                ${appState.subjects.map(s => `
+                                    <button type="button" onclick="selectDashSub('${s.id}')" class="w-full flex items-center gap-2 text-left px-3 py-2 rounded-xl text-xs font-bold transition-all ${s.id === selectedDashSubId ? 'bg-sky-50 text-sky-700' : 'text-slate-600 hover:bg-slate-50'}">
+                                        <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: ${s.themeColor};"></span>
+                                        <span class="truncate">${s.name}</span>
+                                        ${s.id === selectedDashSubId ? '<i class="fa-solid fa-check text-[10px] ml-auto text-sky-600"></i>' : ''}
+                                    </button>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="building-chart-container" class="min-h-[175px] flex items-end justify-around border-b border-slate-100 pb-2 pt-6 px-1 gap-2 overflow-x-auto bg-slate-50/50 rounded-2xl p-3 border border-slate-100">
+                    </div>
+
+                    <!-- CQ / MCQ TOGGLE BUTTONS FOR IMPORTANCE GRAPH -->
+                    <div class="flex justify-center gap-3 pt-1" id="imp-toggle-container">
+                        <button id="imp-btn-cq" onclick="setBoardImpMode('CQ')" class="px-5 py-1.5 rounded-xl text-xs font-bold shadow-sm transition-all duration-200">
+                            [ CQ ]
+                        </button>
+                        <button id="imp-btn-mcq" onclick="setBoardImpMode('MCQ')" class="px-5 py-1.5 rounded-xl text-xs font-bold shadow-sm transition-all duration-200">
+                            [ MCQ ]
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            app.innerHTML = html;
+            setupWeeklySwipe();
+            renderBuildingChart(selectedDashSubId);
+
+            if (welcomePopupDismissed) {
+                animateNumber('dash-ssc-weeks-num', 62, sscWeeks, 1200);
+                animateNumber('dash-test-weeks-num', 42, testWeeks, 1200);
+            }
+        }
+
+        function setupWeeklySwipe() {
+            const card = document.getElementById('weekly-progress-card');
+            if (!card) return;
+
+            let startX = 0;
+            let startY = 0;
+
+            card.addEventListener('touchstart', (e) => {
+                if (!e.touches || e.touches.length !== 1) return;
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+            }, { passive: true });
+
+            card.addEventListener('touchend', (e) => {
+                if (!e.changedTouches || e.changedTouches.length !== 1) return;
+                const dx = e.changedTouches[0].clientX - startX;
+                const dy = e.changedTouches[0].clientY - startY;
+                const threshold = 50;
+
+                if (Math.abs(dx) < threshold || Math.abs(dx) <= Math.abs(dy)) return;
+                if (dx > 0) changeWeekOffset(-1);
+                else changeWeekOffset(1);
+            }, { passive: true });
+        }
+
+        function changeWeekOffset(delta) {
+            appState.weekOffset = Math.min(0, appState.weekOffset + delta);
+            renderDashboard();
+        }
+
+        function toggleDashSubDropdown(e) {
+            if (e) e.stopPropagation();
+            const list = document.getElementById('dash-sub-dropdown-list');
+            const chevron = document.getElementById('dash-sub-select-chevron');
+            if (!list) return;
+            const willOpen = list.classList.contains('hidden');
+            list.classList.toggle('hidden', !willOpen);
+            if (chevron) chevron.style.transform = willOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+        }
+
+        function selectDashSub(subId) {
+            selectedDashSubId = subId;
+            const list = document.getElementById('dash-sub-dropdown-list');
+            const chevron = document.getElementById('dash-sub-select-chevron');
+            if (list) list.classList.add('hidden');
+            if (chevron) chevron.style.transform = 'rotate(0deg)';
+
+            const label = document.getElementById('dash-sub-select-label');
+            const sub = appState.subjects.find(s => s.id === subId);
+            if (label && sub) label.textContent = sub.name;
+
+            if (list) {
+                Array.from(list.children).forEach((btn) => {
+                    const s = appState.subjects[Array.prototype.indexOf.call(list.children, btn)];
+                    if (!s) return;
+                    const isActive = s.id === selectedDashSubId;
+                    btn.className = `w-full flex items-center gap-2 text-left px-3 py-2 rounded-xl text-xs font-bold transition-all ${isActive ? 'bg-sky-50 text-sky-700' : 'text-slate-600 hover:bg-slate-50'}`;
+                    const checkIcon = btn.querySelector('.fa-check');
+                    if (isActive && !checkIcon) {
+                        const icon = document.createElement('i');
+                        icon.className = 'fa-solid fa-check text-[10px] ml-auto text-sky-600';
+                        btn.appendChild(icon);
+                    } else if (!isActive && checkIcon) {
+                        checkIcon.remove();
+                    }
+                });
+            }
+
+            renderBuildingChart(subId);
+        }
+
+        document.addEventListener('click', (e) => {
+            const wrap = document.getElementById('dash-sub-dropdown-wrap');
+            const list = document.getElementById('dash-sub-dropdown-list');
+            if (wrap && list && !wrap.contains(e.target)) {
+                list.classList.add('hidden');
+                const chevron = document.getElementById('dash-sub-select-chevron');
+                if (chevron) chevron.style.transform = 'rotate(0deg)';
+            }
+        });
+
+        function setBoardImpMode(mode) {
+            currentBoardImpMode = mode;
+            const subId = selectedDashSubId || appState.subjects[0].id;
+            renderBuildingChart(subId);
+        }
+
+        function renderBuildingChart(subId) {
+            const container = document.getElementById('building-chart-container');
+            if (!container) return;
+
+            const sub = appState.subjects.find(s => s.id === subId);
+            if (!sub || !sub.chapters) return;
+
+            const cqBtn = document.getElementById('imp-btn-cq');
+            const mcqBtn = document.getElementById('imp-btn-mcq');
+            const themeColor = sub.themeColor || '#0284c7';
+
+            if (cqBtn && mcqBtn) {
+                if (currentBoardImpMode === 'CQ') {
+                    cqBtn.style.backgroundColor = themeColor;
+                    cqBtn.style.color = '#ffffff';
+                    cqBtn.style.boxShadow = `0 4px 12px ${themeColor}40`;
+                    cqBtn.className = "px-5 py-1.5 rounded-xl text-xs font-bold shadow-sm transition-all duration-200 ring-2 ring-white";
+
+                    mcqBtn.style.backgroundColor = '';
+                    mcqBtn.style.color = '';
+                    mcqBtn.style.boxShadow = '';
+                    mcqBtn.className = "px-5 py-1.5 rounded-xl text-xs font-bold shadow-sm transition-all duration-200 bg-slate-100 text-slate-600 hover:bg-slate-200";
+                } else {
+                    mcqBtn.style.backgroundColor = themeColor;
+                    mcqBtn.style.color = '#ffffff';
+                    mcqBtn.style.boxShadow = `0 4px 12px ${themeColor}40`;
+                    mcqBtn.className = "px-5 py-1.5 rounded-xl text-xs font-bold shadow-sm transition-all duration-200 ring-2 ring-white";
+
+                    cqBtn.style.backgroundColor = '';
+                    cqBtn.style.color = '';
+                    cqBtn.style.boxShadow = '';
+                    cqBtn.className = "px-5 py-1.5 rounded-xl text-xs font-bold shadow-sm transition-all duration-200 bg-slate-100 text-slate-600 hover:bg-slate-200";
+                }
+            }
+
+            // Check if CQ is disabled for Bangla 2nd or ICT
+            if (currentBoardImpMode === 'CQ' && (sub.id === 'ban2' || sub.id === 'ict')) {
+                container.innerHTML = `
+                    <div class="w-full py-8 flex flex-col items-center justify-center text-center space-y-2">
+                        <span class="inline-block px-3 py-1 bg-amber-100 text-amber-800 rounded-lg text-xs font-bold">N/A</span>
+                        <p class="text-xs text-slate-500 font-medium">${sub.name}-এ কোনো CQ বোর্ডের প্রশ্ন থাকে না।</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let chapters = [...sub.chapters];
+            const impKey = currentBoardImpMode === 'CQ' ? 'cqPastCount' : 'mcqPastCount';
+
+            chapters.sort((a, b) => {
+                const valA = a[impKey] || 0;
+                const valB = b[impKey] || 0;
+                if (valB !== valA) {
+                    return valB - valA;
+                }
+                return a.origNum - b.origNum;
+            });
+
+            let maxVal = 1;
+            chapters.forEach(ch => {
+                const val = ch[impKey] || 0;
+                if (val > maxVal) maxVal = val;
+            });
+
+            let html = '';
+            chapters.forEach((ch) => {
+                const countVal = ch[impKey] || 0;
+                const heightPx = Math.max(18, Math.round((countVal / maxVal) * 115));
+
+                html += `
+                    <div class="flex-1 min-w-[24px] flex flex-col items-center gap-1.5 group cursor-pointer" title="${ch.name}: ${countVal} ${currentBoardImpMode}">
+                        <span class="text-[10px] font-extrabold px-1.5 py-0.5 rounded-md bg-white border border-slate-200/80 shadow-2xs text-slate-700 opacity-90 group-hover:opacity-100 group-hover:scale-110 transition-all" style="color: ${themeColor}">
+                            ${countVal}
+                        </span>
+                        <div class="w-full max-w-[28px] rounded-t-lg shadow-sm transition-all duration-300 building-bar group-hover:brightness-110 group-hover:scale-y-105" 
+                             style="height: ${heightPx}px; background: linear-gradient(to top, ${themeColor}, ${themeColor}dd); box-shadow: 0 4px 10px ${themeColor}30;">
+                        </div>
+                        <span class="text-[10px] font-bold text-slate-600 group-hover:text-slate-900 transition-colors bg-white/80 px-1 rounded-md border border-slate-100">C${ch.origNum}</span>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // --- SETTINGS MODAL & QUESTION TARGET SYSTEM ---
+        let selectedSettingsSubId = null;
+        let selectedSettingsType = 'CQ';
+        let selectedTargetType = 'CQ';
+        let selectedTargetSubId = null;
+        let activeSettingsMainTab = 'general';
+        let activeGeneralTab = 'profile';
+        let activeSubjectsTab = 'importance';
+        let currentSubjectModalType = null; // 'importance' or 'target'
+
+        function openSubjectModalForTab(type) {
+            currentSubjectModalType = type;
+            const modalList = document.getElementById('subject-modal-list');
+            const overlay = document.getElementById('subject-modal-overlay');
+            if (!modalList || !overlay) return;
+
+            let activeId = type === 'importance' ? selectedSettingsSubId : selectedTargetSubId;
+            let html = '';
+            appState.subjects.forEach(s => {
+                const isSelected = s.id === activeId;
+                html += `
+                    <button type="button" onclick="selectSubjectFromModal('${s.id}')" class="w-full flex items-center gap-3 p-2.5 rounded-2xl transition-all border ${isSelected ? 'bg-[#F8B337]/10 border-[#F8B337] text-slate-900 font-bold' : 'bg-slate-50 border-slate-100 text-slate-700 font-medium hover:bg-slate-100'} text-xs text-left">
+                        <span class="w-3 h-3 rounded-full flex-shrink-0" style="background-color: ${s.themeColor};"></span>
+                        <span class="flex-1 whitespace-normal leading-snug">${s.name}</span>
+                        ${isSelected ? '<i class="fa-solid fa-circle-check text-[#F8B337] text-sm flex-shrink-0"></i>' : ''}
+                    </button>
+                `;
+            });
+            modalList.innerHTML = html;
+            overlay.classList.remove('hidden');
+        }
+
+        function closeSubjectModal() {
+            const overlay = document.getElementById('subject-modal-overlay');
+            if (overlay) overlay.classList.add('hidden');
+        }
+
+        function selectSubjectFromModal(subId) {
+            if (currentSubjectModalType === 'importance') selectedSettingsSubId = subId;
+            if (currentSubjectModalType === 'target') selectedTargetSubId = subId;
+            closeSubjectModal();
+            renderSettingsContent();
+        }
+
+        function openSettingsModal() {
+            if (!selectedSettingsSubId && appState.subjects.length > 0) selectedSettingsSubId = appState.subjects[0].id;
+            if (!selectedTargetSubId && appState.subjects.length > 0) selectedTargetSubId = appState.subjects[0].id;
+            // Settings always opens on General > Profile.
+            activeSettingsMainTab = 'general';
+            activeGeneralTab = 'profile';
+            renderSettingsContent();
+        }
+
+        function renderSettingsContent() {
+            const activeImportanceSub = appState.subjects.find(s => s.id === selectedSettingsSubId) || appState.subjects[0];
+            const activeTargetSub = appState.subjects.find(s => s.id === selectedTargetSubId) || appState.subjects[0];
+
+            let importanceChaptersHtml = '';
+            if (activeImportanceSub) {
+                const isImpCQDisabled = selectedSettingsType === 'CQ' && (activeImportanceSub.id === 'ban2' || activeImportanceSub.id === 'ict');
+                if (isImpCQDisabled) {
+                    importanceChaptersHtml = `<div class="p-6 bg-slate-50 border border-slate-200/80 rounded-2xl text-center space-y-2"><span class="inline-block px-3 py-1 bg-amber-100 text-amber-800 rounded-lg text-xs font-bold">N/A</span><p class="text-xs text-slate-500 font-medium">${activeImportanceSub.name}-এ কোনো CQ বোর্ডের প্রশ্ন থাকে না।</p></div>`;
+                } else {
+                    activeImportanceSub.chapters.forEach(ch => {
+                        const val = selectedSettingsType === 'CQ' ? (ch.cqPastCount || 0) : (ch.mcqPastCount || 0);
+                        importanceChaptersHtml += `<div class="flex items-center justify-between gap-3 p-3 bg-slate-50 border border-slate-200/80 rounded-xl"><span class="text-xs font-bold text-slate-700 leading-snug">${ch.origNum}. ${ch.name}</span><input type="number" value="${val}" min="0" onchange="updateImportanceVal('${activeImportanceSub.id}', '${ch.id}', '${selectedSettingsType}', this.value)" class="w-20 flex-shrink-0 text-center bg-white border border-slate-300 rounded-lg py-2 text-sm font-bold text-slate-800 focus:ring-2 focus:ring-[#F8B337]/40 outline-none"></div>`;
+                    });
+                }
+            }
+
+            let targetChaptersHtml = '';
+            if (activeTargetSub) {
+                const isTargetCQDisabled = selectedTargetType === 'CQ' && (activeTargetSub.id === 'ban2' || activeTargetSub.id === 'ict');
+                const isTargetSQDisabled = selectedTargetType === 'SQ' && activeTargetSub.id === 'ban2';
+                if (isTargetCQDisabled || isTargetSQDisabled) {
+                    const typeLabel = isTargetCQDisabled ? 'CQ' : 'SQ';
+                    targetChaptersHtml = `<div class="p-6 bg-slate-50 border border-slate-200/80 rounded-2xl text-center space-y-2"><span class="inline-block px-3 py-1 bg-amber-100 text-amber-800 rounded-lg text-xs font-bold">N/A</span><p class="text-xs text-slate-500 font-medium">${activeTargetSub.name}-এ কোনো ${typeLabel} প্রশ্ন থাকে না।</p></div>`;
+                } else {
+                    activeTargetSub.chapters.forEach(ch => {
+                        // Bangla 1st chapters 31-32 have no SQ segment.
+                        if (activeTargetSub.id === 'ban1' && selectedTargetType === 'SQ' && ch.origNum >= 31 && ch.origNum <= 32) return;
+                        let key = 'cqTarget';
+                        if (selectedTargetType === 'MCQ') key = 'mcqTarget';
+                        if (selectedTargetType === 'SQ') key = 'sqTarget';
+                        const val = ch[key] || 0;
+                        targetChaptersHtml += `<div class="flex items-center justify-between gap-3 p-3 bg-slate-50 border border-slate-200/80 rounded-xl"><span class="text-xs font-bold text-slate-700 leading-snug">${ch.origNum}. ${ch.name}</span><input type="number" value="${val}" min="0" onchange="updateTargetVal('${activeTargetSub.id}', '${ch.id}', '${selectedTargetType}', this.value)" class="w-20 flex-shrink-0 text-center bg-white border border-slate-300 rounded-lg py-2 text-sm font-bold text-slate-800 focus:ring-2 focus:ring-[#F8B337]/40 outline-none"></div>`;
+                    });
+                }
+            }
+
+            const bookHtml = appState.subjects.map((sub, idx) => `
+                <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-3 space-y-3">
+                    <div class="flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-extrabold text-white flex-shrink-0" style="background-color:${sub.themeColor}">${idx + 1}</span>
+                        <div class="min-w-0"><div class="text-sm font-extrabold text-slate-800 leading-snug">${sub.name}</div><div class="text-[10px] text-slate-400">Book Cover / Google Drive Link</div></div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <img src="${getDirectImageUrl(sub.coverUrl)}" onerror="this.src='https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=180&auto=format&fit=crop&q=80'" class="w-14 h-20 rounded-xl object-cover bg-white border border-slate-200 shadow-sm flex-shrink-0" alt="${sub.name} cover">
+                        <input type="text" value="${sub.coverUrl || ''}" onchange="updateBookUrl('${sub.id}', this.value)" placeholder="Google Drive link" class="min-w-0 flex-1 bg-white border border-slate-300 rounded-xl px-3 py-2.5 text-[11px] text-slate-700 outline-none focus:ring-2 focus:ring-[#F8B337]/40">
+                    </div>
+                </div>
+            `).join('');
+
+            const profileUrl = appState.user.profileImageUrl || PROFILE_IMAGE_URL;
+            const contentHtml = `
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-base font-extrabold text-slate-800"><i class="fa-solid fa-gear text-sky-600 mr-2"></i>Settings & Customization</h3>
+                        <button onclick="closeModal()" class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-[#F8B337]/15 hover:text-[#F8B337] active:scale-95 transition-all"><i class="fa-solid fa-xmark text-base"></i></button>
+                    </div>
+
+                    <div class="flex bg-slate-100 p-1 rounded-xl text-xs font-bold gap-1">
+                        <button onclick="switchSettingsMainTab('general')" class="flex-1 py-2 px-2 text-center rounded-lg transition-all ${activeSettingsMainTab === 'general' ? 'bg-[#F8B337] text-white shadow-sm' : 'text-slate-600'}">GENERAL</button>
+                        <button onclick="switchSettingsMainTab('subjects')" class="flex-1 py-2 px-2 text-center rounded-lg transition-all ${activeSettingsMainTab === 'subjects' ? 'bg-[#F8B337] text-white shadow-sm' : 'text-slate-600'}">SUBJECTS</button>
+                    </div>
+
+                    ${activeSettingsMainTab === 'general' ? `
+                        <div class="flex bg-slate-100 p-1 rounded-xl text-xs font-bold gap-1">
+                            <button onclick="switchGeneralTab('profile')" class="flex-1 py-2 px-2 rounded-lg transition-all ${activeGeneralTab === 'profile' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500'}">Profile</button>
+                            <button onclick="switchGeneralTab('exam')" class="flex-1 py-2 px-2 rounded-lg transition-all ${activeGeneralTab === 'exam' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500'}">Exam Dates</button>
+                        </div>
+                        ${activeGeneralTab === 'profile' ? `
+                            <div class="space-y-3">
+                                <div class="text-sm font-extrabold text-slate-800">Your Profile</div>
+                                <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-3 space-y-3">
+                                    <div class="flex items-center gap-3">
+                                        <img src="${getDirectImageUrl(profileUrl)}" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'" class="w-16 h-16 rounded-full object-cover border-2 border-white shadow-md ring-2 ring-sky-100" alt="Profile">
+                                        <div class="text-[10px] text-slate-500 leading-relaxed">আপনার Profile Picture-এর Google Drive link এখানে replace করুন। Save করলে Welcome Popup এবং Home-এর profile picture আপডেট হবে।</div>
+                                    </div>
+                                    <input type="text" value="${profileUrl}" onchange="appState.user.profileImageUrl=this.value.trim() || PROFILE_IMAGE_URL; saveStorage();" placeholder="Google Drive / image link" class="w-full bg-white border border-slate-300 rounded-xl px-3 py-2.5 text-xs text-slate-700 outline-none focus:ring-2 focus:ring-[#F8B337]/40">
+                                </div>
+                                <div class="space-y-1"><label class="text-xs font-bold text-slate-700">Your Name</label><input type="text" value="${appState.user.welcomeName || ''}" onchange="appState.user.welcomeName=this.value.trim() || 'NADIM'; saveStorage();" placeholder="NADIM" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-bold text-slate-800 outline-none focus:ring-2 focus:ring-[#F8B337]/40"></div>
+                                <div class="space-y-1"><label class="text-xs font-bold text-slate-700">আপনার নাম</label><input type="text" value="${appState.user.name || ''}" onchange="appState.user.name=this.value.trim() || 'নাদিম হোসেন'; saveStorage();" placeholder="নাদিম হোসেন" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-bold text-slate-800 outline-none focus:ring-2 focus:ring-[#F8B337]/40"></div>
+                            </div>
+                        ` : `
+                            <div class="space-y-3">
+                                <div class="space-y-1"><label class="text-xs font-bold text-slate-700">Test Exam Date</label><input type="date" value="${appState.dates.testExam}" onchange="appState.dates.testExam=this.value; saveStorage();" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3.5 text-sm font-bold text-slate-800 outline-none focus:ring-2 focus:ring-[#F8B337]/40"></div>
+                                <div class="space-y-1"><label class="text-xs font-bold text-slate-700">SSC Exam Date</label><input type="date" value="${appState.dates.sscExam}" onchange="appState.dates.sscExam=this.value; saveStorage();" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3.5 text-sm font-bold text-slate-800 outline-none focus:ring-2 focus:ring-[#F8B337]/40"></div>
+                            </div>
+                        `}
+                    ` : `
+                        <div class="flex bg-slate-100 p-1 rounded-xl text-xs font-bold gap-1">
+                            <button onclick="switchSubjectsTab('importance')" class="flex-1 py-2 px-1 rounded-lg transition-all ${activeSubjectsTab === 'importance' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500'}">Board Importance</button>
+                            <button onclick="switchSubjectsTab('target')" class="flex-1 py-2 px-1 rounded-lg transition-all ${activeSubjectsTab === 'target' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500'}">Question Targets</button>
+                            <button onclick="switchSubjectsTab('book')" class="flex-1 py-2 px-1 rounded-lg transition-all ${activeSubjectsTab === 'book' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500'}">Book</button>
+                        </div>
+
+                        ${activeSubjectsTab === 'importance' ? `
+                            <div class="space-y-3"><div class="flex gap-2 items-center"><button type="button" onclick="openSubjectModalForTab('importance')" class="flex-1 min-w-0 bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs font-bold text-slate-700 hover:bg-slate-100 transition-all flex items-center justify-between"><span class="whitespace-normal text-left leading-snug">${activeImportanceSub.name}</span><i class="fa-solid fa-chevron-down text-[10px] text-slate-400 ml-1 flex-shrink-0"></i></button><div class="flex bg-slate-100 p-1 rounded-xl text-xs font-bold flex-shrink-0"><button onclick="selectedSettingsType='CQ'; renderSettingsContent();" class="px-3 py-1.5 rounded-lg ${selectedSettingsType === 'CQ' ? 'bg-[#F8B337] text-white shadow-sm' : 'text-slate-500'}">CQ</button><button onclick="selectedSettingsType='MCQ'; renderSettingsContent();" class="px-3 py-1.5 rounded-lg ${selectedSettingsType === 'MCQ' ? 'bg-[#F8B337] text-white shadow-sm' : 'text-slate-500'}">MCQ</button></div></div><div class="space-y-2 max-h-[40vh] overflow-y-auto pr-1">${importanceChaptersHtml}</div></div>
+                        ` : ''}
+
+                        ${activeSubjectsTab === 'target' ? `
+                            <div class="space-y-3"><div class="flex gap-2 items-center"><button type="button" onclick="openSubjectModalForTab('target')" class="flex-1 min-w-0 bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs font-bold text-slate-700 hover:bg-slate-100 transition-all flex items-center justify-between"><span class="whitespace-normal text-left leading-snug">${activeTargetSub.name}</span><i class="fa-solid fa-chevron-down text-[10px] text-slate-400 ml-1 flex-shrink-0"></i></button><div class="flex bg-slate-100 p-1 rounded-xl text-xs font-bold flex-shrink-0"><button onclick="selectedTargetType='CQ'; renderSettingsContent();" class="px-2.5 py-1.5 rounded-lg ${selectedTargetType === 'CQ' ? 'bg-[#F8B337] text-white shadow-sm' : 'text-slate-500'}">CQ</button><button onclick="selectedTargetType='MCQ'; renderSettingsContent();" class="px-2.5 py-1.5 rounded-lg ${selectedTargetType === 'MCQ' ? 'bg-[#F8B337] text-white shadow-sm' : 'text-slate-500'}">MCQ</button><button onclick="selectedTargetType='SQ'; renderSettingsContent();" class="px-2.5 py-1.5 rounded-lg ${selectedTargetType === 'SQ' ? 'bg-[#F8B337] text-white shadow-sm' : 'text-slate-500'}">SQ</button></div></div><div class="space-y-2 max-h-[40vh] overflow-y-auto pr-1">${targetChaptersHtml}</div></div>
+                        ` : ''}
+
+                        ${activeSubjectsTab === 'book' ? `<div class="space-y-3"><div class="text-sm font-extrabold text-slate-800">Book Covers</div><div class="space-y-3 max-h-[55vh] overflow-y-auto pr-1">${bookHtml}</div></div>` : ''}
+                    `}
+
+                    <button onclick="closeModal(); if(appState.activeTab==='home') renderHome(); else renderDashboard();" class="w-full py-3.5 bg-[#F8B337] text-white font-bold text-sm rounded-xl shadow-md active:scale-95 transition-all">Save & Apply Changes</button>
+                </div>
+            `;
+            showModal(contentHtml);
+        }
+
+        function switchSettingsMainTab(tab) {
+            activeSettingsMainTab = tab;
+            renderSettingsContent();
+        }
+
+        function switchGeneralTab(tab) {
+            activeGeneralTab = tab;
+            renderSettingsContent();
+        }
+
+        function switchSubjectsTab(tab) {
+            activeSubjectsTab = tab;
+            renderSettingsContent();
+        }
+
+        function updateBookUrl(subId, val) {
+            const sub = appState.subjects.find(s => s.id === subId);
+            if (sub) {
+                sub.coverUrl = val.trim();
+                saveStorage();
+            }
+        }
+
+        function updateImportanceVal(subId, chId, qType, val) {
+            const sub = appState.subjects.find(s => s.id === subId);
+            const ch = sub?.chapters.find(c => c.id === chId);
+            if (ch) {
+                const key = qType === 'CQ' ? 'cqPastCount' : 'mcqPastCount';
+                ch[key] = Math.max(0, parseInt(val) || 0);
+                saveStorage();
+            }
+        }
+
+        function updateTargetVal(subId, chId, qType, val) {
+            const sub = appState.subjects.find(s => s.id === subId);
+            const ch = sub?.chapters.find(c => c.id === chId);
+            if (ch) {
+                let key = 'cqTarget';
+                if (qType === 'MCQ') key = 'mcqTarget';
+                if (qType === 'SQ') key = 'sqTarget';
+                ch[key] = Math.max(0, parseInt(val) || 0);
+                saveStorage();
+            }
+        }
+
+        // --- MODAL UTILITIES ---
+        function showModal(contentHtml) {
+            const modalOverlay = document.getElementById('modal-overlay');
+            const modalContent = document.getElementById('modal-content');
+            if (modalOverlay && modalContent) {
+                modalContent.innerHTML = contentHtml;
+                modalOverlay.classList.remove('hidden');
+            }
+        }
+
+        function closeModal() {
+            const modalOverlay = document.getElementById('modal-overlay');
+            if (modalOverlay) {
+                modalOverlay.classList.add('hidden');
+            }
+        }
+
+        // Close modal on clicking overlay backdrop
+        document.getElementById('modal-overlay')?.addEventListener('click', (e) => {
+            if (e.target.id === 'modal-overlay') {
+                closeModal();
+            }
+        });
+
+        // Close subject selector popup modal on clicking backdrop
+        document.getElementById('subject-modal-overlay')?.addEventListener('click', (e) => {
+            if (e.target.id === 'subject-modal-overlay') {
+                closeSubjectModal();
+            }
+        });
+
+        // --- APP INITIALIZATION ON WINDOW LOAD ---
+        window.onload = function () {
+            loadStorage();
+
+            // Set welcome profile image
+            const welcomeImg = document.getElementById('welcome-profile-img');
+            if (welcomeImg) {
+                welcomeImg.src = getDirectImageUrl(appState.user.profileImageUrl || PROFILE_IMAGE_URL);
+            }
+            const welcomeName = document.getElementById('welcome-name');
+            if (welcomeName) welcomeName.textContent = appState.user.welcomeName || 'NADIM';
+
+            // Initial render of home tab
+            renderHome();
+
+            // 1. WELCOME POPUP DURATION EXACTLY 1 SECOND (1000ms)
+            setTimeout(() => {
+                const popupOverlay = document.getElementById('welcome-popup-overlay');
+                if (popupOverlay) {
+                    popupOverlay.classList.add('opacity-0', 'pointer-events-none');
+                    setTimeout(() => {
+                        popupOverlay.style.display = 'none';
+                    }, 500);
+                }
+                welcomePopupDismissed = true;
+
+                // Home countdown already starts immediately when Home is rendered.
+                if (appState.activeTab !== 'home') {
+                    const sscWeeks = Math.floor(getDaysRemaining(appState.dates.sscExam) / 7);
+                    const testWeeks = Math.floor(getDaysRemaining(appState.dates.testExam) / 7);
+                    animateNumber('dash-ssc-weeks-num', 62, sscWeeks, 1200);
+                    animateNumber('dash-test-weeks-num', 42, testWeeks, 1200);
+                }
+            }, 1000);
+        };
+    </script>
+</body>
+</html>
